@@ -2,7 +2,7 @@
 
 namespace Domain.Models.Entities
 {
-    public class ApoliceSeguro
+    public class Apolice
     {
         public int Id { get; set; }
         public string Numero { get; set; }

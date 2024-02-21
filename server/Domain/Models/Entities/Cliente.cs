@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Domain.Models.Entities
 {
-    public abstract class Cliente
+    public class Cliente
     {
         public int Id { get; set; }
         public string Cpf { get; set; }

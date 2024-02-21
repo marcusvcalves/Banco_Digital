@@ -8,7 +8,7 @@ namespace Domain.Models.Entities
         Desativado
     }
 
-    public abstract class Cartao
+    public class Cartao
     {
         public int Id { get; set; }
         public StatusCartao StatusCartao { get; set; }
@@ -21,7 +21,7 @@ namespace Domain.Models.Entities
     public class CartaoDebito : Cartao
     {
         public decimal LimiteDiario { get; set; }
-        public ICollection<ApoliceSeguro> Apolices { get; } = new List<ApoliceSeguro>();
+        public ICollection<Apolice> Apolices { get; } = new List<Apolice>();
     }
     
     public class CartaoCredito : Cartao
