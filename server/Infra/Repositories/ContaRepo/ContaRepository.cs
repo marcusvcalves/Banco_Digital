@@ -32,13 +32,13 @@ public class ContaRepository : IContaRepository
         return novaConta;
     }
 
-    public async Task UpdateAsync(int id, UpdateContaDto updateContaDto)
+    public async Task UpdateAsync(int id, Conta conta)
     {
         Conta contaExistente = await GetByIdAsync(id);
 
         if (contaExistente != null)
         {
-            contaExistente.Senha = updateContaDto.Senha;
+            contaExistente.Senha = conta.Senha;
             
             _context.Entry(contaExistente).State = EntityState.Modified;
             await _context.SaveChangesAsync();

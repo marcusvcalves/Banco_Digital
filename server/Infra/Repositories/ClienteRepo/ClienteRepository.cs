@@ -34,13 +34,16 @@ public class ClienteRepository : IClienteRepository
         return novoCliente;
     }
 
-    public async Task UpdateAsync(int id, UpdateClienteDto updateClienteDto)
+    public async Task UpdateAsync(int id, Cliente cliente)
     {
         Cliente clienteExistente = await GetByIdAsync(id);
         if (clienteExistente != null)
         {
-            _mapper.Map(updateClienteDto, clienteExistente);
-        
+            clienteExistente.Cpf = cliente.Cpf;
+            clienteExistente.Nome = cliente.Nome;
+            clienteExistente.DataNascimento = cliente.DataNascimento;
+            clienteExistente.Endereco = cliente.Endereco;
+                
             _context.Entry(clienteExistente).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }

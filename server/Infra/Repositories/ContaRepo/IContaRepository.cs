@@ -8,6 +8,6 @@ public interface IContaRepository
     Task<List<Conta>> GetAllAsync();
     Task<Conta?> GetByIdAsync(int id);
     Task<Conta> CreateAsync(Conta novaConta);
-    Task UpdateAsync(int id, UpdateContaDto updateContaDto);
+    Task UpdateAsync(int id, Conta conta);
     Task DeleteAsync(int id);
 }

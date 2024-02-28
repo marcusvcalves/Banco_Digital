@@ -30,14 +30,14 @@ public class CartaoRepository : ICartaoRepository
 
         return novoCartao;
     }
-    public async Task UpdateAsync(int id, UpdateCartaoDto updateCartaoDto)
+    public async Task UpdateAsync(int id, Cartao cartao)
     {
         Cartao cartaoExistente = await GetByIdAsync(id);
 
         if (cartaoExistente != null)
         {
-            cartaoExistente.StatusCartao = updateCartaoDto.StatusCartao;
-            cartaoExistente.Senha = updateCartaoDto.Senha;
+            cartaoExistente.StatusCartao = cartao.StatusCartao;
+            cartaoExistente.Senha = cartao.Senha;
             
             _context.Entry(cartaoExistente).State = EntityState.Modified;
             await _context.SaveChangesAsync();
