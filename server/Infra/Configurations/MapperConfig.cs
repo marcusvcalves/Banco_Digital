@@ -1,23 +1,20 @@
 using AutoMapper;
+using Domain.Models.DTO.ApoliceSeguroDTO;
 using Domain.Models.DTO.CartaoDTO;
 using Domain.Models.DTO.ClienteDTO;
+using Domain.Models.DTO.ContaDTO;
 using Domain.Models.Entities;
 
-namespace Infra.Configurations;
-
-public class MapperConfig : Profile
+namespace Infra.Configurations
 {
-    public static void Configure()
+    public class MapperConfig : Profile
     {
-        MapperConfiguration config = new MapperConfiguration(cfg =>
+        public MapperConfig()
         {
-            cfg.CreateMap<Cartao, GetCartaoDto>();
-            cfg.CreateMap<Cliente, UpdateClienteDto>();
-            cfg.CreateMap<Cliente, CreateClienteDto>();
-            cfg.CreateMap<List<Cliente>, List<GetClienteDto>>();
-            cfg.CreateMap<Cliente, GetClienteDto>();
-        });
-
-        IMapper mapper = config.CreateMapper();
+            CreateMap<Apolice, GetApoliceDto>().ReverseMap();
+            CreateMap<Cartao, GetCartaoDto>().ReverseMap();
+            CreateMap<Cliente, GetClienteDto>().ReverseMap();
+            CreateMap<Conta, GetContaDto>().ReverseMap();
+        }
     }
 }
