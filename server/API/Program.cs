@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Infra.Configurations;
 using Infra.Data;
@@ -13,8 +14,12 @@ var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddControllers().AddJsonOptions(x =>
-    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+});
+
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
@@ -36,7 +41,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
         policy =>
         {
-            policy.WithOrigins("http://localhost:3000", "https://localhost:3000", "http://192.168.0.7:3000")
+            policy.WithOrigins("http://localhost:5173", "http://localhost:5173", "http://localhost:3000", "https://localhost:3000", "http://192.168.0.7:3000")
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials();
