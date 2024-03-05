@@ -58,7 +58,7 @@ export const Apolices = () => {
   return (
     <div className="flex justify-center pt-10">
       <div className="text-center">
-        <h2 className="text-2xl font-bold mb-4">Cartões</h2>
+        <h2 className="text-2xl font-bold mb-4">Apólices</h2>
         <Table
           tableHeaders={tableHeaders}
           tableData={tableData}
