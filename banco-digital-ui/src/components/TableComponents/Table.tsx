@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { MdDeleteForever, MdEdit, MdRefresh } from 'react-icons/md';
 import { DeleteConfirmationModal } from './DeleteConfirmationModal';
-
+import { Pagination } from './Pagination';
 
 interface TableProps<T extends object, K extends keyof T> {
     tableHeaders: string[],
@@ -14,16 +14,22 @@ interface TableProps<T extends object, K extends keyof T> {
 
 export const Table = <T extends object, K extends keyof T>({ tableHeaders, tableData, variavelId, editT, deleteT, loading }: TableProps<T, K>) => {
     const [deleteId, setDeleteId] = useState<T[K] | null>(null);
+    const [currentPage, setCurrentPage] = useState(1);
 
-    function handleEdit(id: T[K]) {
+    const itemsPerPage = 10;
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = tableData.slice(indexOfFirstItem, indexOfLastItem);
+
+    const handleEdit = (id: T[K]) => {
         editT(id);
     }
 
-    function handleDelete(id: T[K]) {
+    const handleDelete = (id: T[K]) => {
         setDeleteId(id);
     }
 
-    function confirmDelete() {
+    const confirmDelete = () => {
         if (deleteId !== null) {
             deleteT(deleteId);
             setDeleteId(null);
@@ -32,37 +38,37 @@ export const Table = <T extends object, K extends keyof T>({ tableHeaders, table
 
     return (
         <>
-            <table className="table-auto w-full border-collapse">
-                <thead>
-                    <tr className="bg-gray-200">
+            <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                    <tr>
                         {tableHeaders.map((headerItem, index) => (
-                            <th key={index} className="px-4 py-2">{headerItem}</th>
+                            <th key={index} className="px-6 py-4 text-left text-md font-semibold text-black-900 uppercase">{headerItem}</th>
                         ))}
-                        <th></th>
-                        <th></th>
+                        <th className="px-6 py-4"></th>
+                        <th className="px-6 py-4"></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className="bg-white divide-y divide-gray-200">
                 {loading ? (
                     <tr>
-                        <td colSpan={tableHeaders.length + 2} className="text-center py-4">
+                        <td colSpan={tableHeaders.length + 2} className="text-center py-8">
                             <div className="flex items-center justify-center">
-                                <MdRefresh className="animate-spin h-8 w-8 text-gray-500" />
-                                <span className="ml-2">Carregando...</span>
+                                <MdRefresh className="animate-spin h-12 w-12 text-gray-500" />
+                                <span className="ml-4 text-xl font-semibold">Carregando...</span>
                             </div>
                         </td>
                     </tr>
                     ) : (
-                    tableData.map((rowData, rowIndex) => (
-                        <tr key={rowIndex} className={rowIndex % 2 === 1 ? "bg-gray-100" : ""}>
+                    currentItems.map((rowData, rowIndex) => (
+                        <tr key={rowIndex} className={rowIndex % 2 === 0 ? "bg-gray-50" : "bg-white"}>
                             {Object.keys(rowData).map((key, colIndex) => (
-                                <td key={colIndex} className="border px-4 py-2">{String(rowData[key as keyof T])}</td>
+                                <td key={colIndex} className="px-6 py-4 whitespace-nowrap text-md text-gray-900">{String(rowData[key as keyof T])}</td>
                             ))}
-                            <td className="border px-4 py-2">
-                                <MdEdit onClick={() => handleEdit(rowData[variavelId])} />
+                            <td className="px-6 py-4 whitespace-nowrap text-right text-md">
+                                <MdEdit size={20} onClick={() => handleEdit(rowData[variavelId])} className="text-blue-600 cursor-pointer hover:scale-125" />
                             </td>
-                            <td className="border px-4 py-2">
-                                <MdDeleteForever onClick={() => handleDelete(rowData[variavelId])} />
+                            <td className="px-6 py-4 whitespace-nowrap text-right text-md">
+                                <MdDeleteForever size={20} onClick={() => handleDelete(rowData[variavelId])} className="text-red-600 cursor-pointer hover:scale-125" />
                             </td>
                         </tr>
                     ))
@@ -74,6 +80,7 @@ export const Table = <T extends object, K extends keyof T>({ tableHeaders, table
                 onClose={() => setDeleteId(null)}
                 onConfirm={confirmDelete}
             />
+            <Pagination currentPage={currentPage} totalPages={Math.ceil(tableData.length / itemsPerPage)} onPageChange={setCurrentPage} />
         </>
     );
 };
