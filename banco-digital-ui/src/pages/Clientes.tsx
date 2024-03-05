@@ -1,4 +1,4 @@
-import { Table } from "../components/Table";
+import { Table } from "../components/TableComponents/Table";
 import { axiosInstance } from "../api/axios"
 import { useEffect, useState } from "react";
 import { format } from 'date-fns';
@@ -22,13 +22,11 @@ export const Clientes = () => {
       .get("/api/v1/clientes")
       .then((res) => {
         setClients(res.data);
+        setLoading(false);
       })
       .catch((error) => {
         console.log(`Erro ao buscar clientes: ${error}`);
       })
-      .finally(() => {
-        setLoading(false);
-      });
   }
 
   useEffect(() => {
@@ -52,7 +50,7 @@ export const Clientes = () => {
   const deleteClient = (id: number): void => {
     axiosInstance
       .delete(`/api/v1/clientes/${id}`)
-      .then((res) => {
+      .then(() => {
         setClients(clients.filter(client => client.id !== id));
       })
       .catch((error) => {
@@ -60,12 +58,18 @@ export const Clientes = () => {
       });
   }
 
-
   return (
     <div className="flex justify-center pt-10">
       <div className="text-center">
         <h2 className="text-2xl font-bold mb-4">Clientes</h2>
-        <Table tableHeaders={tableHeaders} tableData={tableData} variavelId="id" editT={editClient} deleteT={deleteClient} />
+        <Table
+          tableHeaders={tableHeaders}
+          tableData={tableData}
+          variavelId="id"
+          editT={editClient}
+          deleteT={deleteClient}
+          loading={loading}
+        />
       </div>
     </div>
   );
