@@ -3,6 +3,7 @@ interface DeleteConfirmationModalProps{
     onClose: () => void,
     onConfirm: () => void
 }
+
 export const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm }: DeleteConfirmationModalProps) => {
     if (!isOpen) return null;
 

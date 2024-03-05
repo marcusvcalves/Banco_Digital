@@ -3,7 +3,6 @@ import { axiosInstance } from "../api/axios"
 import { useEffect, useState } from "react";
 import { format } from 'date-fns';
 
-
 interface ClientsProps {
   id: number,
   cpf: string,

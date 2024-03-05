@@ -9,7 +9,6 @@ interface AccountProps {
   dataCriacao: string,
 }
 
-
 export const Contas = () => {
   const [accounts, setAccounts] = useState<AccountProps[]>([]);
   const [loading, setLoading] = useState<boolean>(true);

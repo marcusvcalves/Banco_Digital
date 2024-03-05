@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { axiosInstance } from "../api/axios";
 import { Table } from "../components/TableComponents/Table";
+import { format } from "date-fns";
 
 interface PolicyProps{
   id: number,
@@ -35,7 +36,7 @@ export const Apolices = () => {
   const tableData = policies.map(policy => ({
     "id": policy.id,
     "numero": policy.numero,
-    "dataContratacao": policy.dataContratacao,
+    "dataContratacao": format(new Date(policy.dataContratacao), 'dd/MM/yyyy'),
     "descricaoAcionamento": policy.descricaoAcionamento
   }));
 
