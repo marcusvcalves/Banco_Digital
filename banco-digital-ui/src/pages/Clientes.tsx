@@ -21,7 +21,7 @@ export const Clientes = () => {
     axiosInstance
       .get("/api/v1/clientes")
       .then((res) => {
-        setClients(res.data);
+        setClients(res.data.$values);
         setLoading(false);
       })
       .catch((error) => {
