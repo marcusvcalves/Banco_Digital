@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Domain.Models.DTO.ClienteDTO;
 using Domain.Models.Entities;
 using Infra.Data;
 using Microsoft.EntityFrameworkCore;

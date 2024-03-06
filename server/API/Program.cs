@@ -1,4 +1,4 @@
-using System.Text.Json;
+using System.Reflection;
 using System.Text.Json.Serialization;
 using Infra.Configurations;
 using Infra.Data;
@@ -7,6 +7,7 @@ using Infra.Repositories.CartaoRepo;
 using Infra.Repositories.ClienteRepo;
 using Infra.Repositories.ContaRepo;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +27,18 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo()
+    {
+        Version = "v1",
+        Title = "Banco Digital API",
+    });
+
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+});
 
 builder.Services.AddScoped<IApoliceRepository, ApoliceRepository>();
 builder.Services.AddScoped<ICartaoRepository, CartaoRepository>();
@@ -50,11 +62,8 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 

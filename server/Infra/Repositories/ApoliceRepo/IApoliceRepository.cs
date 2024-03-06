@@ -1,5 +1,4 @@
-﻿using Domain.Models.DTO.ApoliceSeguroDTO;
-using Domain.Models.Entities;
+﻿using Domain.Models.Entities;
 
 namespace Infra.Repositories.ApoliceRepo;
 public interface IApoliceRepository

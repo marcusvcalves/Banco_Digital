@@ -1,6 +1,4 @@
-﻿using Domain.Models.Entities;
-
-namespace Domain.Models.DTO.ApoliceSeguroDTO;
+﻿namespace Domain.Models.DTO.ApoliceSeguroDTO;
 
 public class GetApoliceDto
 {

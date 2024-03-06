@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using Domain.Models.DTO.CartaoDTO;
-using Infra.Data;
+﻿using Infra.Data;
 using Domain.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 

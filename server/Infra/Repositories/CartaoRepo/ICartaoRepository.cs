@@ -1,5 +1,4 @@
-﻿using Domain.Models.DTO.CartaoDTO;
-using Domain.Models.Entities;
+﻿using Domain.Models.Entities;
 
 namespace Infra.Repositories.CartaoRepo;
 

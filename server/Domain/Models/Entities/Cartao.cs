@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Domain.Models.Entities
+﻿namespace Domain.Models.Entities
 {
     public enum StatusCartao
     {

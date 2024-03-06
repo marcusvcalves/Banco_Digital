@@ -1,5 +1,4 @@
-﻿using Domain.Models.DTO.ClienteDTO;
-using Domain.Models.Entities;
+﻿using Domain.Models.Entities;
 
 namespace Infra.Repositories.ClienteRepo;
 
