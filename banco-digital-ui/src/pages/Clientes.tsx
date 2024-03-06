@@ -2,6 +2,8 @@ import { Table } from "../components/TableComponents/Table";
 import { axiosInstance } from "../api/axios"
 import { useEffect, useState } from "react";
 import { format } from 'date-fns';
+import { Tabs } from "antd";
+import TabPane from "antd/es/tabs/TabPane";
 
 interface ClientsProps {
   id: number,
@@ -61,14 +63,18 @@ export const Clientes = () => {
     <div className="flex justify-center pt-10">
       <div className="text-center">
         <h2 className="text-2xl font-bold mb-4">Clientes</h2>
-        <Table
-          tableHeaders={tableHeaders}
-          tableData={tableData}
-          variavelId="id"
-          editT={editClient}
-          deleteT={deleteClient}
-          loading={loading}
-        />
+        <Tabs defaultActiveKey="1">
+          <TabPane tab="Lista de Clientes" key="1">
+            <Table
+              tableHeaders={tableHeaders}
+              tableData={tableData}
+              variavelId="id"
+              editT={editClient}
+              deleteT={deleteClient}
+              loading={loading}
+            />
+          </TabPane>
+        </Tabs>
       </div>
     </div>
   );

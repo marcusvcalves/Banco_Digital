@@ -1,7 +1,10 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 import { axiosInstance } from "../api/axios";
 import { format } from "date-fns";
 import { Table } from "../components/TableComponents/Table";
+import { Tabs } from 'antd';
+
+const { TabPane } = Tabs;
 
 interface AccountProps {
   id: number,
@@ -33,7 +36,7 @@ export const Contas = () => {
   const tableHeaders = ['ID', 'Saldo', 'Data de Criação'];
   const tableData = accounts.map(account => ({
     "id": account.id,
-    "statusCartao": account.saldo,
+    "statusCartao": `R$ ${account.saldo}`,
     "dataCriacao": format(new Date(account.dataCriacao), 'dd/MM/yyyy')
   }));
 
@@ -52,19 +55,25 @@ export const Contas = () => {
       });
   };
 
-  
   return (
     <div className="flex justify-center pt-10">
       <div className="text-center">
         <h2 className="text-2xl font-bold mb-4">Contas</h2>
-        <Table
-          tableHeaders={tableHeaders}
-          tableData={tableData}
-          variavelId="id"
-          editT={editAccount}
-          deleteT={deleteAccount}
-          loading={loading}
-        />
+        <Tabs defaultActiveKey="1">
+          <TabPane tab="Lista de Contas" key="1">
+            <Table
+              tableHeaders={tableHeaders}
+              tableData={tableData}
+              variavelId="id"
+              editT={editAccount}
+              deleteT={deleteAccount}
+              loading={loading}
+            />
+          </TabPane>
+          <TabPane tab="PIX" key="2">
+            {/* Conteúdo da outra aba */}
+          </TabPane>
+        </Tabs>
       </div>
     </div>
   );

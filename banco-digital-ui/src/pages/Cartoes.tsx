@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
 import { axiosInstance } from "../api/axios";
 import { Table } from "../components/TableComponents/Table";
+import { Tabs } from "antd";
+import TabPane from "antd/es/tabs/TabPane";
 
 interface CardProps {
   id: number,
@@ -55,18 +57,25 @@ export const Cartoes = () => {
 
 
   return (
-    <div className="flex justify-center pt-10">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold mb-4">Cartões</h2>
-        <Table
-          tableHeaders={tableHeaders}
-          tableData={tableData}
-          variavelId="id"
-          editT={editCard}
-          deleteT={deleteCard}
-          loading={loading}
-        />
+        <div className="flex justify-center pt-10">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-4">Cartões</h2>
+          <Tabs defaultActiveKey="1">
+            <TabPane tab="Lista de Cartões" key="1">
+              <Table
+                tableHeaders={tableHeaders}
+                tableData={tableData}
+                variavelId="id"
+                editT={editCard}
+                deleteT={deleteCard}
+                loading={loading}
+              />
+            </TabPane>
+            <TabPane tab="Mudar Senha do Cartão" key="2">
+              {/* Conteúdo da outra aba */}
+            </TabPane>
+          </Tabs>
+        </div>
       </div>
-    </div>
   );
 };
