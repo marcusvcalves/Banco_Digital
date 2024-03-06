@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
+using Domain.Interfaces;
 using Infra.Configurations;
 using Infra.Data;
 using Infra.Repositories.ApoliceRepo;
