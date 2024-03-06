@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using Domain.Interfaces;
 using Domain.Models.DTO.ClienteDTO;
 using Domain.Models.Entities;
-using Infra.Repositories.ClienteRepo;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -10,12 +10,12 @@ namespace API.Controllers
     [Route(template: "api/v1/clientes")]
     public class ClienteController : ControllerBase
     {
-        private readonly IClienteRepository _repository;
+        private readonly IClienteRepository _clienteRepository;
         private readonly IMapper _mapper;
         
-        public ClienteController(IClienteRepository repository, IMapper mapper)
+        public ClienteController(IClienteRepository clienteRepository, IMapper mapper)
         {
-            _repository = repository;
+            _clienteRepository = clienteRepository;
             _mapper = mapper;
         }
         
@@ -25,7 +25,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            List<Cliente> clientes = await _repository.GetAllAsync();
+            List<Cliente> clientes = await _clienteRepository.GetAllAsync();
             var getClientesDto = clientes.Select(cliente => _mapper.Map<GetClienteDto>(cliente));
             
             return Ok(getClientesDto);
@@ -36,9 +36,9 @@ namespace API.Controllers
         /// </summary>
         /// <param name="id">O ID do cliente a ser recuperado.</param>
         [HttpGet("{id}")]
-        public async Task<ActionResult<GetClienteDto>> GetById(int id)
+        public async Task<ActionResult<GetClienteDto>> GetById([FromRoute] int id)
         {
-            Cliente cliente = await _repository.GetByIdAsync(id);
+            Cliente cliente = await _clienteRepository.GetByIdAsync(id);
             
             if (cliente == null)
             {
@@ -55,9 +55,9 @@ namespace API.Controllers
         /// </summary>
         /// <param name="cliente">Os dados do novo cliente a ser criado.</param>
         [HttpPost]
-        public async Task<IActionResult> Create(Cliente cliente)
+        public async Task<IActionResult> Create([FromBody] Cliente cliente)
         {
-            Cliente novoCliente = await _repository.CreateAsync(cliente); 
+            Cliente novoCliente = await _clienteRepository.CreateAsync(cliente); 
 
             return CreatedAtAction(nameof(GetById), new { id = novoCliente.Id }, novoCliente);
         }
@@ -67,16 +67,16 @@ namespace API.Controllers
         /// </summary>
         /// <param name="id">O ID do cliente a ser atualizado.</param>
         /// <param name="cliente">Os novos dados do cliente.</param>
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, Cliente cliente)
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] Cliente cliente)
         {
-            Cliente clienteExistente = await _repository.GetByIdAsync(id);
+            Cliente clienteExistente = await _clienteRepository.GetByIdAsync(id);
             if (clienteExistente == null)
             {
                 return NotFound();
             }
             
-            await _repository.UpdateAsync(id, cliente);
+            await _clienteRepository.UpdateAsync(id, cliente);
 
             GetClienteDto getClienteDto = _mapper.Map<GetClienteDto>(clienteExistente);
             
@@ -88,13 +88,13 @@ namespace API.Controllers
         /// </summary>
         /// <param name="id">O ID do cliente a ser deletado.</param>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            Cliente clienteParaDeletar = await _repository.GetByIdAsync(id);
+            Cliente clienteParaDeletar = await _clienteRepository.GetByIdAsync(id);
 
             if (clienteParaDeletar != null)
             {
-                await _repository.DeleteAsync(id);
+                await _clienteRepository.DeleteAsync(id);
 
                 GetClienteDto getClienteDto = _mapper.Map<GetClienteDto>(clienteParaDeletar);
                 

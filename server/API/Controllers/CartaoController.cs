@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using Domain.Interfaces;
 using Domain.Models.DTO.CartaoDTO;
 using Domain.Models.Entities;
-using Infra.Repositories.CartaoRepo;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -10,12 +10,12 @@ namespace API.Controllers
     [Route(template: "api/v1/cartoes")]
     public class CartaoController : ControllerBase
     {
-        private readonly ICartaoRepository _repository;
+        private readonly ICartaoRepository _cartaoRepository;
         private readonly IMapper _mapper;
         
-        public CartaoController(ICartaoRepository repository, IMapper mapper)
+        public CartaoController(ICartaoRepository cartaoRepository, IMapper mapper)
         {
-            _repository = repository;
+            _cartaoRepository = cartaoRepository;
             _mapper = mapper;
         }
         
@@ -25,7 +25,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            List<Cartao> cartoes = await _repository.GetAllAsync();
+            List<Cartao> cartoes = await _cartaoRepository.GetAllAsync();
             var getCartoesDto = cartoes.Select(cartao => _mapper.Map<GetCartaoDto>(cartao));
 
             return Ok(getCartoesDto);
@@ -38,7 +38,7 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<GetCartaoDto>> GetById(int id)
         {
-            Cartao cartao = await _repository.GetByIdAsync(id);
+            Cartao cartao = await _cartaoRepository.GetByIdAsync(id);
 
             if (cartao == null)
             {
@@ -57,7 +57,7 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Cartao cartao)
         {
-            Cartao novoCartao = await _repository.CreateAsync(cartao); 
+            Cartao novoCartao = await _cartaoRepository.CreateAsync(cartao); 
 
             return CreatedAtAction(nameof(GetById), new { id = novoCartao.Id }, novoCartao);
         }
@@ -70,13 +70,13 @@ namespace API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, Cartao cartao)
         {
-            var cartaoExistente = await _repository.GetByIdAsync(id);
+            var cartaoExistente = await _cartaoRepository.GetByIdAsync(id);
             if (cartaoExistente == null)
             {
                 return NotFound();
             }
             
-            await _repository.UpdateAsync(id, cartao);
+            await _cartaoRepository.UpdateAsync(id, cartao);
             
             GetCartaoDto getCartaoDto = _mapper.Map<GetCartaoDto>(cartaoExistente);
 
@@ -90,11 +90,11 @@ namespace API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            Cartao cartaoParaDeletar = await _repository.GetByIdAsync(id);
+            Cartao cartaoParaDeletar = await _cartaoRepository.GetByIdAsync(id);
 
             if (cartaoParaDeletar != null)
             {
-                await _repository.DeleteAsync(id);
+                await _cartaoRepository.DeleteAsync(id);
 
                 GetCartaoDto getCartaoDto = _mapper.Map<GetCartaoDto>(cartaoParaDeletar);
                 

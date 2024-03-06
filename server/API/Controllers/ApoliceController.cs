@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using Domain.Interfaces;
 using Domain.Models.DTO.ApoliceSeguroDTO;
 using Domain.Models.Entities;
-using Infra.Repositories.ApoliceRepo;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -10,12 +10,12 @@ namespace API.Controllers
     [Route(template: "api/v1/apolices")]
     public class ApoliceController : ControllerBase
     {
-        private readonly IApoliceRepository _repository;
+        private readonly IApoliceRepository _apoliceRepository;
         private readonly IMapper _mapper;
 
-        public ApoliceController(IApoliceRepository repository, IMapper mapper)
+        public ApoliceController(IApoliceRepository apoliceRepository, IMapper mapper)
         {
-            _repository = repository;
+            _apoliceRepository = apoliceRepository;
             _mapper = mapper;
         }
 
@@ -25,7 +25,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            List<Apolice> apolices = await _repository.GetAllAsync();
+            List<Apolice> apolices = await _apoliceRepository.GetAllAsync();
         
             var getApolicesDto = apolices.Select(apolice => _mapper.Map<GetApoliceDto>(apolice));
 
@@ -39,7 +39,7 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<GetApoliceDto>> GetById(int id)
         {
-            Apolice apolice = await _repository.GetByIdAsync(id);
+            Apolice apolice = await _apoliceRepository.GetByIdAsync(id);
 
             if (apolice == null)
             {
@@ -58,7 +58,7 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Apolice apolice)
         {
-            Apolice novaApolice = await _repository.CreateAsync(apolice);
+            Apolice novaApolice = await _apoliceRepository.CreateAsync(apolice);
 
             return CreatedAtAction(nameof(GetById), new { id = apolice.Id }, novaApolice);
         }
@@ -71,13 +71,13 @@ namespace API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update (int id, Apolice apolice)
         {
-            var apoliceExistente = await _repository.GetByIdAsync(id);
+            var apoliceExistente = await _apoliceRepository.GetByIdAsync(id);
             if (apoliceExistente == null)
             {
                 return NotFound();
             }
         
-            await _repository.UpdateAsync(id, apolice);
+            await _apoliceRepository.UpdateAsync(id, apolice);
         
             GetApoliceDto getApoliceDto = _mapper.Map<GetApoliceDto>(apoliceExistente);
 
@@ -91,11 +91,11 @@ namespace API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            Apolice apoliceParaDeletar = await _repository.GetByIdAsync(id);
+            Apolice apoliceParaDeletar = await _apoliceRepository.GetByIdAsync(id);
 
             if (apoliceParaDeletar != null)
             {
-                await _repository.DeleteAsync(id);
+                await _apoliceRepository.DeleteAsync(id);
             
                 GetApoliceDto getApoliceDto = _mapper.Map<GetApoliceDto>(apoliceParaDeletar);
             

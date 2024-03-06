@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using Domain.Interfaces;
 using Domain.Models.DTO.ContaDTO;
 using Domain.Models.Entities;
-using Infra.Repositories.ContaRepo;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -10,12 +10,12 @@ namespace API.Controllers
     [Route(template: "api/v1/contas")]
     public class ContaController : ControllerBase
     {
-        private readonly IContaRepository _repository;
+        private readonly IContaRepository _contaRepository;
         private readonly IMapper _mapper;
 
-        public ContaController(IContaRepository repository, IMapper mapper)
+        public ContaController(IContaRepository contaRepository, IMapper mapper)
         {
-            _repository = repository;
+            _contaRepository = contaRepository;
             _mapper = mapper;
         }
         
@@ -25,7 +25,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            List<Conta> contas = await _repository.GetAllAsync();
+            List<Conta> contas = await _contaRepository.GetAllAsync();
             var getContasDto = contas.Select(conta => _mapper.Map<GetContaDto>(conta));
             
             return Ok(getContasDto);
@@ -38,7 +38,7 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<GetContaDto>> GetById(int id)
         {
-            Conta conta = await _repository.GetByIdAsync(id);
+            Conta conta = await _contaRepository.GetByIdAsync(id);
             
             if (conta == null)
             {
@@ -57,7 +57,7 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Conta conta)
         {
-            Conta novaConta = await _repository.CreateAsync(conta); 
+            Conta novaConta = await _contaRepository.CreateAsync(conta); 
 
             return CreatedAtAction(nameof(GetById), new { id = novaConta.Id }, novaConta);
         }
@@ -71,7 +71,7 @@ namespace API.Controllers
         [HttpPost("{idContaEnvio}/{idContaRecebedora}/{quantia}")]
         public async Task TransferAsync(int idContaEnvio, int idContaRecebedora, decimal quantia)
         {
-            await _repository.TransferAsync(idContaEnvio, idContaRecebedora, quantia);
+            await _contaRepository.TransferAsync(idContaEnvio, idContaRecebedora, quantia);
         }
         
         /// <summary>
@@ -82,13 +82,13 @@ namespace API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, Conta conta)
         {
-            var contaExistente = await _repository.GetByIdAsync(id);
+            var contaExistente = await _contaRepository.GetByIdAsync(id);
             if (contaExistente == null)
             {
                 return NotFound();
             }
             
-            await _repository.UpdateAsync(id, conta);
+            await _contaRepository.UpdateAsync(id, conta);
             
             GetContaDto getContaDto = _mapper.Map<GetContaDto>(contaExistente);
 
@@ -102,11 +102,11 @@ namespace API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            Conta contaParaDeletar = await _repository.GetByIdAsync(id);
+            Conta contaParaDeletar = await _contaRepository.GetByIdAsync(id);
 
             if (contaParaDeletar != null)
             {
-                await _repository.DeleteAsync(id);
+                await _contaRepository.DeleteAsync(id);
 
                 GetContaDto getCartaoDto = _mapper.Map<GetContaDto>(contaParaDeletar);
                 
