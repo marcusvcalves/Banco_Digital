@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import { axiosInstance } from "../api/axios";
 import { Table } from "../components/TableComponents/Table";
 import { format } from "date-fns";
-import TabPane from "antd/es/tabs/TabPane";
 import { Tabs } from "antd";
 
 interface PolicyProps{
@@ -57,24 +56,31 @@ export const Apolices = () => {
       });
   };
 
+  const tabsItems = [
+    {
+      key: "1",
+      label: "Lista de Apólices",
+      children: <Table
+                  tableHeaders={tableHeaders}
+                  tableData={tableData}
+                  variavelId="id"
+                  editT={editPolicy}
+                  deleteT={deletePolicy}
+                  loading={loading}
+                />
+    },
+    {
+      key: "2",
+      label: "Gerar Apólice Eletrônica"
+
+    }
+  ]
+
   return (
         <div className="flex justify-center pt-10">
         <div className="text-center">
           <h2 className="text-2xl font-bold mb-4">Apólices</h2>
-          <Tabs defaultActiveKey="1">
-            <TabPane tab="Lista de Apólices" key="1">
-              <Table
-                tableHeaders={tableHeaders}
-                tableData={tableData}
-                variavelId="id"
-                editT={editPolicy}
-                deleteT={deletePolicy}
-                loading={loading}
-              />
-            </TabPane>
-            <TabPane tab="Gerar Apólice Eletrônica" key="2">
-              {/* Conteúdo da outra aba */}
-            </TabPane>
+          <Tabs defaultActiveKey="1" items={tabsItems}>
           </Tabs>
         </div>
       </div>

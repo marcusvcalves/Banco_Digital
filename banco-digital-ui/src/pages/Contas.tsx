@@ -4,8 +4,6 @@ import { format } from "date-fns";
 import { Table } from "../components/TableComponents/Table";
 import { Tabs } from 'antd';
 
-const { TabPane } = Tabs;
-
 interface AccountProps {
   id: number,
   saldo: number,
@@ -55,24 +53,30 @@ export const Contas = () => {
       });
   };
 
+  const tabsItems = [
+    {
+      key: "1",
+      label: "Lista de Contas",
+      children: <Table           
+                  tableHeaders={tableHeaders}
+                  tableData={tableData}
+                  variavelId="id"
+                  editT={editAccount}
+                  deleteT={deleteAccount}
+                  loading={loading}
+                />
+    },
+    {
+      key: "2",
+      label: "PIX"
+    }
+  ]
+
   return (
     <div className="flex justify-center pt-10">
       <div className="text-center">
         <h2 className="text-2xl font-bold mb-4">Contas</h2>
-        <Tabs defaultActiveKey="1">
-          <TabPane tab="Lista de Contas" key="1">
-            <Table
-              tableHeaders={tableHeaders}
-              tableData={tableData}
-              variavelId="id"
-              editT={editAccount}
-              deleteT={deleteAccount}
-              loading={loading}
-            />
-          </TabPane>
-          <TabPane tab="PIX" key="2">
-            {/* Conteúdo da outra aba */}
-          </TabPane>
+        <Tabs defaultActiveKey="1" items={tabsItems}>
         </Tabs>
       </div>
     </div>
