@@ -3,10 +3,7 @@ using System.Text.Json.Serialization;
 using Domain.Interfaces;
 using Infra.Configurations;
 using Infra.Data;
-using Infra.Repositories.ApoliceRepo;
-using Infra.Repositories.CartaoRepo;
-using Infra.Repositories.ClienteRepo;
-using Infra.Repositories.ContaRepo;
+using Infra.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 

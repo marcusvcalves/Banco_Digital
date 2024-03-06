@@ -36,9 +36,9 @@ namespace API.Controllers
         /// </summary>
         /// <param name="id">O ID do cartão a ser recuperado.</param>
         [HttpGet("{id}")]
-        public async Task<ActionResult<GetCartaoDto>> GetById(int id)
+        public async Task<ActionResult<GetCartaoDto>> GetById([FromRoute] int id)
         {
-            Cartao cartao = await _cartaoRepository.GetByIdAsync(id);
+            Cartao? cartao = await _cartaoRepository.GetByIdAsync(id);
 
             if (cartao == null)
             {
@@ -55,7 +55,7 @@ namespace API.Controllers
         /// </summary>
         /// <param name="cartao">Os dados do novo cartão a ser criado.</param>
         [HttpPost]
-        public async Task<IActionResult> Create(Cartao cartao)
+        public async Task<IActionResult> Create([FromBody] Cartao cartao)
         {
             Cartao novoCartao = await _cartaoRepository.CreateAsync(cartao); 
 
@@ -68,9 +68,10 @@ namespace API.Controllers
         /// <param name="id">O ID do cartão a ser atualizado.</param>
         /// <param name="cartao">Os novos dados do cartão.</param>
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, Cartao cartao)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] Cartao cartao)
         {
-            var cartaoExistente = await _cartaoRepository.GetByIdAsync(id);
+            Cartao? cartaoExistente = await _cartaoRepository.GetByIdAsync(id);
+            
             if (cartaoExistente == null)
             {
                 return NotFound();
@@ -88,9 +89,9 @@ namespace API.Controllers
         /// </summary>
         /// <param name="id">O ID do cartão a ser deletado.</param>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            Cartao cartaoParaDeletar = await _cartaoRepository.GetByIdAsync(id);
+            Cartao? cartaoParaDeletar = await _cartaoRepository.GetByIdAsync(id);
 
             if (cartaoParaDeletar != null)
             {

@@ -3,12 +3,12 @@
     public class Conta
     {
         public int Id { get; set; }
-        public string Senha { get; set; }
+        public string? Senha { get; set; }
         public decimal Saldo { get; set; }
         public DateTime DataCriacao { get; set; }
         public int ClienteId { get; set; }
-        public Cliente Cliente { get; set; }
-        public ICollection<Cartao> Cartoes { get; } = new List<Cartao>();
+        public Cliente? Cliente { get; set; }
+        public ICollection<Cartao>? Cartoes { get; } = new List<Cartao>();
     }
     
 

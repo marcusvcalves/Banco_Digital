@@ -3,7 +3,7 @@ using Domain.Models.Entities;
 using Infra.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infra.Repositories.ContaRepo;
+namespace Infra.Repositories;
 
 public class ContaRepository : IContaRepository
 {
@@ -34,28 +34,31 @@ public class ContaRepository : IContaRepository
     
     public async Task TransferAsync(int idContaEnvio, int idContaRecebedora, decimal quantia)
     {
-        Conta contaOrigem = await GetByIdAsync(idContaEnvio);
-        Conta contaRecebedora = await GetByIdAsync(idContaRecebedora);
+        Conta? contaOrigem = await GetByIdAsync(idContaEnvio);
+        Conta? contaRecebedora = await GetByIdAsync(idContaRecebedora);
 
-        if (idContaEnvio != null && idContaRecebedora != null && contaOrigem.Saldo >= quantia)
+        if (contaOrigem == null || contaRecebedora == null)
         {
-            contaOrigem.Saldo -= quantia;
-            contaRecebedora.Saldo += quantia;
-
-            _context.Entry(contaOrigem).State = EntityState.Modified;
-            _context.Entry(contaRecebedora).State = EntityState.Modified;
-
-            await _context.SaveChangesAsync();
+            throw new Exception("Uma ou ambas as contas não foram encontradas.");
         }
-        else
+
+        if (contaOrigem.Saldo < quantia)
         {
-            throw new Exception("Não foi possível concluir a transferência.");
+            throw new Exception("Saldo insuficiente na conta de origem.");
         }
+        
+        contaOrigem.Saldo -= quantia;
+        contaRecebedora.Saldo += quantia;
+
+        _context.Entry(contaOrigem).State = EntityState.Modified;
+        _context.Entry(contaRecebedora).State = EntityState.Modified;
+
+        await _context.SaveChangesAsync();
     }
 
     public async Task UpdateAsync(int id, Conta conta)
     {
-        Conta contaExistente = await GetByIdAsync(id);
+        Conta? contaExistente = await GetByIdAsync(id);
 
         if (contaExistente != null)
         {
@@ -69,7 +72,7 @@ public class ContaRepository : IContaRepository
 
     public async Task DeleteAsync(int id)
     {
-        Conta conta = await GetByIdAsync(id);
+        Conta? conta = await GetByIdAsync(id);
 
         if (conta != null)
         {

@@ -38,7 +38,7 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<GetClienteDto>> GetById([FromRoute] int id)
         {
-            Cliente cliente = await _clienteRepository.GetByIdAsync(id);
+            Cliente? cliente = await _clienteRepository.GetByIdAsync(id);
             
             if (cliente == null)
             {
@@ -70,7 +70,8 @@ namespace API.Controllers
         [HttpPatch("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] Cliente cliente)
         {
-            Cliente clienteExistente = await _clienteRepository.GetByIdAsync(id);
+            Cliente? clienteExistente = await _clienteRepository.GetByIdAsync(id);
+            
             if (clienteExistente == null)
             {
                 return NotFound();
@@ -90,7 +91,7 @@ namespace API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            Cliente clienteParaDeletar = await _clienteRepository.GetByIdAsync(id);
+            Cliente? clienteParaDeletar = await _clienteRepository.GetByIdAsync(id);
 
             if (clienteParaDeletar != null)
             {

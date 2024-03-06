@@ -8,10 +8,11 @@ public class AppDbContext : DbContext
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
     }
-    public DbSet<Apolice>? Apolices { get; set; }
-    public DbSet<Cartao>? Cartoes { get; set; }
-    public DbSet<Cliente>? Clientes { get; set; }
-    public DbSet<Conta>? Contas { get; set; }
+    
+    public DbSet<Apolice> Apolices { get; set; }
+    public DbSet<Cartao> Cartoes { get; set; }
+    public DbSet<Cliente> Clientes { get; set; }
+    public DbSet<Conta> Contas { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         base.OnModelCreating(modelBuilder);

@@ -13,10 +13,10 @@ namespace Domain.Models.Entities
     public class Cliente
     {
         public int Id { get; set; }
-        public string Cpf { get; set; }
-        public string Nome { get; set; }
+        public string? Cpf { get; set; }
+        public string? Nome { get; set; }
         public DateTime DataNascimento { get; set; }
-        public string Endereco { get; set; }
+        public string? Endereco { get; set; }
 
         [JsonIgnore]
         public TipoCliente TipoCliente { get; set; }
@@ -29,6 +29,6 @@ namespace Domain.Models.Entities
             set => TipoCliente = (TipoCliente)Enum.Parse(typeof(TipoCliente), value, ignoreCase: true);
         }
 
-        public ICollection<Conta> Contas { get; set; } = new List<Conta>();
+        public ICollection<Conta>? Contas { get; set; } = new List<Conta>();
     }
 }

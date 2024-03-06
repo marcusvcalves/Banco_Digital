@@ -36,9 +36,9 @@ namespace API.Controllers
         /// </summary>
         /// <param name="id">O ID da conta a ser recuperada.</param>
         [HttpGet("{id}")]
-        public async Task<ActionResult<GetContaDto>> GetById(int id)
+        public async Task<ActionResult<GetContaDto>> GetById([FromRoute] int id)
         {
-            Conta conta = await _contaRepository.GetByIdAsync(id);
+            Conta? conta = await _contaRepository.GetByIdAsync(id);
             
             if (conta == null)
             {
@@ -55,7 +55,7 @@ namespace API.Controllers
         /// </summary>
         /// <param name="conta">Os dados da nova conta a ser criada.</param>
         [HttpPost]
-        public async Task<IActionResult> Create(Conta conta)
+        public async Task<IActionResult> Create([FromBody] Conta conta)
         {
             Conta novaConta = await _contaRepository.CreateAsync(conta); 
 
@@ -69,7 +69,7 @@ namespace API.Controllers
         /// <param name="idContaRecebedora">O ID da conta de destino.</param>
         /// <param name="quantia">A quantia a ser transferida.</param>
         [HttpPost("{idContaEnvio}/{idContaRecebedora}/{quantia}")]
-        public async Task TransferAsync(int idContaEnvio, int idContaRecebedora, decimal quantia)
+        public async Task TransferAsync([FromRoute] int idContaEnvio, [FromRoute] int idContaRecebedora, [FromRoute] decimal quantia)
         {
             await _contaRepository.TransferAsync(idContaEnvio, idContaRecebedora, quantia);
         }
@@ -80,9 +80,10 @@ namespace API.Controllers
         /// <param name="id">O ID da conta a ser atualizada.</param>
         /// <param name="conta">Os novos dados da conta.</param>
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, Conta conta)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] Conta conta)
         {
-            var contaExistente = await _contaRepository.GetByIdAsync(id);
+            Conta? contaExistente = await _contaRepository.GetByIdAsync(id);
+            
             if (contaExistente == null)
             {
                 return NotFound();
@@ -100,9 +101,9 @@ namespace API.Controllers
         /// </summary>
         /// <param name="id">O ID da conta a ser deletada.</param>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            Conta contaParaDeletar = await _contaRepository.GetByIdAsync(id);
+            Conta? contaParaDeletar = await _contaRepository.GetByIdAsync(id);
 
             if (contaParaDeletar != null)
             {

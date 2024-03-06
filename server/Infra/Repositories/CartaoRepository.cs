@@ -3,7 +3,7 @@ using Infra.Data;
 using Domain.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infra.Repositories.CartaoRepo;
+namespace Infra.Repositories;
 
 public class CartaoRepository : ICartaoRepository
 {
@@ -31,7 +31,7 @@ public class CartaoRepository : ICartaoRepository
     }
     public async Task UpdateAsync(int id, Cartao cartao)
     {
-        Cartao cartaoExistente = await GetByIdAsync(id);
+        Cartao? cartaoExistente = await GetByIdAsync(id);
 
         if (cartaoExistente != null)
         {
@@ -45,7 +45,7 @@ public class CartaoRepository : ICartaoRepository
     }
     public async Task DeleteAsync(int id)
     {
-        Cartao cartao = await GetByIdAsync(id);
+        Cartao? cartao = await GetByIdAsync(id);
 
         if (cartao != null)
         {

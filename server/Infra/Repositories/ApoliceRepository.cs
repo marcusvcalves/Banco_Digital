@@ -3,7 +3,7 @@ using Domain.Models.Entities;
 using Infra.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infra.Repositories.ApoliceRepo;
+namespace Infra.Repositories;
 
 public class ApoliceRepository : IApoliceRepository
 {
@@ -34,12 +34,22 @@ public class ApoliceRepository : IApoliceRepository
 
     public async Task UpdateAsync(int id, Apolice apolice)
     {
-        throw new NotImplementedException();
+        Apolice? apoliceExistente = await GetByIdAsync(id);
+
+        if (apoliceExistente != null)
+        {
+            apoliceExistente.Numero = apolice.Numero;
+            apoliceExistente.Valor = apolice.Valor;
+            apoliceExistente.DescricaoAcionamento = apolice.DescricaoAcionamento;
+
+            _context.Entry(apoliceExistente).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
     }
 
     public async Task DeleteAsync(int id)
     {
-        Apolice apolice = await GetByIdAsync(id);
+        Apolice? apolice = await GetByIdAsync(id);
 
         if (apolice != null)
         {

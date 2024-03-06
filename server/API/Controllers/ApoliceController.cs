@@ -37,9 +37,9 @@ namespace API.Controllers
         /// </summary>
         /// <param name="id">O ID da apólice de seguro a ser recuperada.</param>
         [HttpGet("{id}")]
-        public async Task<ActionResult<GetApoliceDto>> GetById(int id)
+        public async Task<ActionResult<GetApoliceDto>> GetById([FromRoute] int id)
         {
-            Apolice apolice = await _apoliceRepository.GetByIdAsync(id);
+            Apolice? apolice = await _apoliceRepository.GetByIdAsync(id);
 
             if (apolice == null)
             {
@@ -69,9 +69,10 @@ namespace API.Controllers
         /// <param name="id">O ID da apólice de seguro a ser atualizada.</param>
         /// <param name="apolice">Os novos dados da apólice de seguro.</param>
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update (int id, Apolice apolice)
+        public async Task<IActionResult> Update ([FromRoute] int id, [FromBody] Apolice apolice)
         {
-            var apoliceExistente = await _apoliceRepository.GetByIdAsync(id);
+            Apolice? apoliceExistente = await _apoliceRepository.GetByIdAsync(id);
+            
             if (apoliceExistente == null)
             {
                 return NotFound();
@@ -89,9 +90,9 @@ namespace API.Controllers
         /// </summary>
         /// <param name="id">O ID da apólice de seguro a ser deletada.</param>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            Apolice apoliceParaDeletar = await _apoliceRepository.GetByIdAsync(id);
+            Apolice? apoliceParaDeletar = await _apoliceRepository.GetByIdAsync(id);
 
             if (apoliceParaDeletar != null)
             {
