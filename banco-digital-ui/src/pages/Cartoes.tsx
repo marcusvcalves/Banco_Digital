@@ -54,6 +54,10 @@ export const Cartoes = () => {
       });
   };
 
+  const handleCreateButtonClick = (): void => {
+    console.log("Botão create clicado");
+  }
+
   const tabsItems = [
     {
       key: "1",
@@ -65,6 +69,8 @@ export const Cartoes = () => {
                   editT={editCard}
                   deleteT={deleteCard}
                   loading={loading}
+                  buttonText="Cadastrar Cartão"
+                  handleCreateButtonClick={handleCreateButtonClick}
                 />
     },
     {

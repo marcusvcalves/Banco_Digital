@@ -60,17 +60,23 @@ export const Clientes = () => {
       });
   }
 
+  const handleCreateButtonClick = (): void => {
+    console.log("Botão create clicado");
+  }
+
   const tabsItems = [
     {
       key: "1",
       label: "Lista de Clientes",
-      children: <Table           
+      children: <Table
                   tableHeaders={tableHeaders}
                   tableData={tableData}
                   variavelId="id"
                   editT={editClient}
                   deleteT={deleteClient}
                   loading={loading}
+                  buttonText="Cadastrar Cliente"
+                  handleCreateButtonClick={handleCreateButtonClick}
                 />
     }
   ]

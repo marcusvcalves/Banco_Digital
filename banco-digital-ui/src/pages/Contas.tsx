@@ -53,17 +53,23 @@ export const Contas = () => {
       });
   };
 
+  const handleCreateButtonClick = (): void => {
+    console.log("Botão create clicado");
+  }
+
   const tabsItems = [
     {
       key: "1",
       label: "Lista de Contas",
-      children: <Table           
+      children: <Table       
                   tableHeaders={tableHeaders}
                   tableData={tableData}
                   variavelId="id"
                   editT={editAccount}
                   deleteT={deleteAccount}
                   loading={loading}
+                  buttonText="Cadastrar Conta"
+                  handleCreateButtonClick={handleCreateButtonClick}
                 />
     },
     {

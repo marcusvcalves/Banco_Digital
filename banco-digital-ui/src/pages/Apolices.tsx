@@ -56,6 +56,10 @@ export const Apolices = () => {
       });
   };
 
+  const handleCreateButtonClick = (): void => {
+    console.log("Botão create clicado");
+  }
+
   const tabsItems = [
     {
       key: "1",
@@ -67,6 +71,8 @@ export const Apolices = () => {
                   editT={editPolicy}
                   deleteT={deletePolicy}
                   loading={loading}
+                  buttonText="Cadastrar Apólice"
+                  handleCreateButtonClick={handleCreateButtonClick}
                 />
     },
     {
