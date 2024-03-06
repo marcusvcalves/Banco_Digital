@@ -13,7 +13,8 @@ namespace Infra.Configurations
         {
             CreateMap<Apolice, GetApoliceDto>().ReverseMap();
             CreateMap<Cartao, GetCartaoDto>().ReverseMap();
-            CreateMap<Cliente, GetClienteDto>().ReverseMap();
+            CreateMap<Cliente, GetClienteDto>()
+                .ForMember(dest => dest.TipoCliente, opt => opt.MapFrom(src => src.TipoClienteString));
             CreateMap<Conta, GetContaDto>().ReverseMap();
         }
     }

@@ -19,12 +19,10 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Apolice>()
             .Property(a => a.Valor)
             .HasColumnType("decimal(18, 2)");
-        
+
         modelBuilder.Entity<Cliente>()
-            .HasDiscriminator<string>("TipoCliente")
-            .HasValue<ClienteComum>("comum")
-            .HasValue<ClienteSuper>("super")
-            .HasValue<ClientePremium>("premium");
+            .Property(c => c.TipoCliente)
+            .HasConversion<string>();
 
         modelBuilder.Entity<Conta>()
             .HasDiscriminator<string>("TipoConta")

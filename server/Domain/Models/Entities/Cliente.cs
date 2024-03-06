@@ -1,5 +1,15 @@
-﻿namespace Domain.Models.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+
+namespace Domain.Models.Entities
 {
+    public enum TipoCliente
+    {
+        Comum,
+        Super,
+        Premium
+    }
+
     public class Cliente
     {
         public int Id { get; set; }
@@ -7,21 +17,18 @@
         public string Nome { get; set; }
         public DateTime DataNascimento { get; set; }
         public string Endereco { get; set; }
-        public ICollection<Conta> Contas { get; } = new List<Conta>();
-    }
 
-    public class ClienteComum : Cliente
-    {
-        
-    }
+        [JsonIgnore]
+        public TipoCliente TipoCliente { get; set; }
 
-    public class ClienteSuper : Cliente
-    {
-        
-    }
+        [NotMapped]
+        [JsonPropertyName("TipoCliente")]
+        public string TipoClienteString
+        {
+            get => TipoCliente.ToString();
+            set => TipoCliente = (TipoCliente)Enum.Parse(typeof(TipoCliente), value, ignoreCase: true);
+        }
 
-    public class ClientePremium : Cliente
-    {
-        
+        public ICollection<Conta> Contas { get; set; } = new List<Conta>();
     }
 }

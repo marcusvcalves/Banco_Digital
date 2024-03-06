@@ -1,4 +1,6 @@
-﻿namespace Domain.Models.DTO.ClienteDTO;
+﻿using Domain.Models.Entities;
+
+namespace Domain.Models.DTO.ClienteDTO;
 
 public class GetClienteDto
 {
@@ -7,4 +9,5 @@ public class GetClienteDto
     public string Nome { get; set; }
     public DateTime DataNascimento { get; set; }
     public string Endereco { get; set; }
+    public string TipoCliente { get; set; }
 }
