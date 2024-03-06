@@ -9,7 +9,8 @@ interface ClientsProps {
   cpf: string,
   nome: string,
   dataNascimento: string,
-  endereco: string
+  endereco: string,
+  tipoCliente: string
 }
 
 export const Clientes = () => {
@@ -34,13 +35,14 @@ export const Clientes = () => {
   }, []);
 
 
-  const tableHeaders = ['ID', 'Nome', 'CPF', 'Data de Nascimento', 'Endereço'];
+  const tableHeaders = ['ID', 'Nome', 'CPF', 'Data de Nascimento', 'Endereço', 'Tipo de Cliente'];
   const tableData = clients.map(client => ({
     "id": client.id,
     "nome": client.nome,
     "cpf": client.cpf,
     "dataNascimento": format(new Date(client.dataNascimento), 'dd/MM/yyyy'),
-    "endereco": client.endereco
+    "endereco": client.endereco,
+    "tipoCliente": client.tipoCliente
   }));
 
   const editClient = (id: number): void => {
