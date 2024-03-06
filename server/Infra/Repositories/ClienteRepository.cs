@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Domain.Interfaces;
 using Domain.Models.Entities;
 using Infra.Data;
 using Microsoft.EntityFrameworkCore;

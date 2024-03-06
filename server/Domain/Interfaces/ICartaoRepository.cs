@@ -1,6 +1,6 @@
 ﻿using Domain.Models.Entities;
 
-namespace Infra.Repositories.CartaoRepo;
+namespace Domain.Interfaces;
 
 public interface ICartaoRepository
 {

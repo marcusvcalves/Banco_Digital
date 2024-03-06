@@ -1,6 +1,6 @@
 ﻿using Domain.Models.Entities;
 
-namespace Infra.Repositories.ContaRepo;
+namespace Domain.Interfaces;
 
 public interface IContaRepository
 {

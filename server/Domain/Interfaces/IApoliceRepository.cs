@@ -1,6 +1,6 @@
 ﻿using Domain.Models.Entities;
 
-namespace Infra.Repositories.ApoliceRepo;
+namespace Domain.Interfaces;
 public interface IApoliceRepository
 {
     Task<List<Apolice>> GetAllAsync();

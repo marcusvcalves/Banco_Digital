@@ -1,4 +1,5 @@
-﻿using Infra.Data;
+﻿using Domain.Interfaces;
+using Infra.Data;
 using Domain.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,6 +1,6 @@
 ﻿using Domain.Models.Entities;
 
-namespace Infra.Repositories.ClienteRepo;
+namespace Domain.Interfaces;
 
 public interface IClienteRepository
 {
