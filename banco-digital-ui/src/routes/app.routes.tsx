@@ -1,10 +1,10 @@
 import { Route, Routes } from 'react-router-dom'
 import { Navbar } from '../components/Navbar'
 import { Homepage } from '../pages/Homepage'
-import { Clientes } from '../pages/Clientes'
-import { Cartoes } from '../pages/Cartoes'
-import { Contas } from '../pages/Contas'
-import { Apolices } from '../pages/Apolices'
+import { Clients } from '../pages/Clients'
+import { Cards } from '../pages/Cards'
+import { Accounts } from '../pages/Accounts'
+import { Policies } from '../pages/Policies'
 
 export const AppRoutes = () => {
   return (
@@ -12,10 +12,10 @@ export const AppRoutes = () => {
         <Navbar />
         <Routes>
             <Route element={<Homepage />} path=""/>
-            <Route element={<Clientes />} path="/clientes"/>
-            <Route element={<Contas />} path="/contas"/>
-            <Route element={<Cartoes />} path="/cartoes"/>
-            <Route element={<Apolices />} path="/apolices"/>
+            <Route element={<Clients />} path="/clientes"/>
+            <Route element={<Accounts />} path="/contas"/>
+            <Route element={<Cards />} path="/cartoes"/>
+            <Route element={<Policies />} path="/apolices"/>
         </Routes>
     </>
   )

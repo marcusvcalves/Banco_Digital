@@ -2,20 +2,22 @@ import { Table } from "../components/TableComponents/Table";
 import { axiosInstance } from "../api/axios"
 import { useEffect, useState } from "react";
 import { format } from 'date-fns';
-import { Tabs } from "antd";
+import { Modal, Tabs } from "antd";
+import { ClientForm } from "../components/ClientForm";
 
-interface ClientsProps {
+interface Client {
   id: number,
   cpf: string,
-  nome: string,
-  dataNascimento: string,
-  endereco: string,
-  tipoCliente: string
+  name: string,
+  birthDate: string,
+  address: string,
+  clientType: string
 }
 
-export const Clientes = () => {
-  const [clients, setClients] = useState<ClientsProps[]>([]);
+export const Clients = () => {
+  const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   
   const getClients = (): void => {
     setLoading(true);
@@ -34,15 +36,14 @@ export const Clientes = () => {
     getClients();
   }, []);
 
-
   const tableHeaders = ['ID', 'Nome', 'CPF', 'Data de Nascimento', 'Endereço', 'Tipo de Cliente'];
   const tableData = clients.map(client => ({
     "id": client.id,
-    "nome": client.nome,
+    "nome": client.name,
     "cpf": client.cpf,
-    "dataNascimento": format(new Date(client.dataNascimento), 'dd/MM/yyyy'),
-    "endereco": client.endereco,
-    "tipoCliente": client.tipoCliente
+    "dataNascimento": format(new Date(client.birthDate), 'dd/MM/yyyy'),
+    "endereco": client.address,
+    "tipoCliente": client.clientType
   }));
 
   const editClient = (id: number): void => {
@@ -61,8 +62,16 @@ export const Clientes = () => {
   }
 
   const handleCreateButtonClick = (): void => {
-    console.log("Botão create clicado");
-  }
+    setIsModalVisible(true);
+  };
+
+  const handleModalClose = (): void => {
+    setIsModalVisible(false);
+  };
+
+  const addClient = (newClient: any): void => {
+    setClients([...clients, newClient]);
+  };
 
   const tabsItems = [
     {
@@ -71,7 +80,7 @@ export const Clientes = () => {
       children: <Table
                   tableHeaders={tableHeaders}
                   tableData={tableData}
-                  variavelId="id"
+                  variableId="id"
                   editT={editClient}
                   deleteT={deleteClient}
                   loading={loading}
@@ -88,6 +97,13 @@ export const Clientes = () => {
         <Tabs defaultActiveKey="1" items={tabsItems}>
         </Tabs>
       </div>
+      <Modal
+        open={isModalVisible}
+        onCancel={handleModalClose}
+        footer={null}
+      >
+        <ClientForm setIsModalVisible={setIsModalVisible} addNewClient={addClient}/>
+      </Modal>
     </div>
   );
 };

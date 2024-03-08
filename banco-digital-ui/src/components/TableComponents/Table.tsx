@@ -7,7 +7,7 @@ import { CreateItem } from './CreateItem';
 interface TableProps<T extends object, K extends keyof T> {
     tableHeaders: string[],
     tableData: T[],
-    variavelId: K, 
+    variableId: K, 
     editT: (id: T[K]) => void, 
     deleteT: (id: T[K]) => void,
     loading: boolean,
@@ -15,7 +15,7 @@ interface TableProps<T extends object, K extends keyof T> {
     handleCreateButtonClick: () => void,    
 }
 
-export const Table = <T extends object, K extends keyof T>({ tableHeaders, tableData, variavelId, editT, deleteT, loading, buttonText, handleCreateButtonClick }: TableProps<T, K>) => {
+export const Table = <T extends object, K extends keyof T>({ tableHeaders, tableData, variableId: variavelId, editT, deleteT, loading, buttonText, handleCreateButtonClick }: TableProps<T, K>) => {
     const [deleteId, setDeleteId] = useState<T[K] | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
 

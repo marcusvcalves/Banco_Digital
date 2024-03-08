@@ -2,17 +2,22 @@ import { useEffect, useState } from "react";
 import { axiosInstance } from "../api/axios";
 import { format } from "date-fns";
 import { Table } from "../components/TableComponents/Table";
-import { Tabs } from 'antd';
+import { Modal, Tabs } from 'antd';
+import { AccountForm } from "../components/AccountForm";
 
 interface AccountProps {
   id: number,
-  saldo: number,
-  dataCriacao: string,
+  number: string,
+  balance: number,
+  accountType: string,
+  creationDate: string,
+  clientId: number
 }
 
-export const Contas = () => {
+export const Accounts = () => {
   const [accounts, setAccounts] = useState<AccountProps[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   const getAccounts = (): void => {
     setLoading(true);
@@ -31,15 +36,18 @@ export const Contas = () => {
     getAccounts();
   },[]);
 
-  const tableHeaders = ['ID', 'Saldo', 'Data de Criação'];
+  const tableHeaders = ['ID', 'Número', 'Saldo', 'Tipo de Conta', 'Data de Criação', 'Cliente ID'];
   const tableData = accounts.map(account => ({
     "id": account.id,
-    "statusCartao": `R$ ${account.saldo}`,
-    "dataCriacao": format(new Date(account.dataCriacao), 'dd/MM/yyyy')
+    "numero": account.number,
+    "saldo": `R$ ${account.balance}`,
+    "tipoConta": account.accountType,
+    "dataCriacao": format(new Date(account.creationDate), 'dd/MM/yyyy'),
+    "clienteId": account.clientId
   }));
 
   const editAccount = (id: number): void => {
-    console.log(`editar cartão ${id}`)
+    console.log(`editar conta ${id}`)
   };
 
   const deleteAccount = (id: number): void => {
@@ -54,7 +62,15 @@ export const Contas = () => {
   };
 
   const handleCreateButtonClick = (): void => {
-    console.log("Botão create clicado");
+    setIsModalVisible(true);
+  };
+
+  const handleModalClose = (): void => {
+    setIsModalVisible(false);
+  };
+
+  const addAccount = (newAccount: any): void => {
+    setAccounts([...accounts, newAccount])
   }
 
   const tabsItems = [
@@ -64,7 +80,7 @@ export const Contas = () => {
       children: <Table       
                   tableHeaders={tableHeaders}
                   tableData={tableData}
-                  variavelId="id"
+                  variableId="id"
                   editT={editAccount}
                   deleteT={deleteAccount}
                   loading={loading}
@@ -85,6 +101,13 @@ export const Contas = () => {
         <Tabs defaultActiveKey="1" items={tabsItems}>
         </Tabs>
       </div>
+      <Modal
+        open={isModalVisible}
+        onCancel={handleModalClose}
+        footer={null}
+      >
+        <AccountForm setIsModalVisible={setIsModalVisible} addAccount={addAccount}/>
+      </Modal>
     </div>
   );
 };

@@ -2,19 +2,21 @@ import { useEffect, useState } from "react"
 import { axiosInstance } from "../api/axios";
 import { Table } from "../components/TableComponents/Table";
 import { format } from "date-fns";
-import { Tabs } from "antd";
+import { Modal, Tabs } from "antd";
+import { PolicyForm } from "../components/PolicyForm";
 
-interface PolicyProps{
+interface Policy{
   id: number,
-  numero: string,
-  dataContratacao: string,
-  valor: number,
-  descricaoAcionamento: string
+  number: string,
+  hiringDate: string,
+  value: number,
+  driveDescription: string
 }
 
-export const Apolices = () => {
-  const [policies, setPolicies] = useState<PolicyProps[]>([]);
+export const Policies = () => {
+  const [policies, setPolicies] = useState<Policy[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const getPolicies = (): void => {
     setLoading(true);
@@ -33,12 +35,13 @@ export const Apolices = () => {
     getPolicies();
   }, []);
 
-  const tableHeaders = ['ID', 'Número da Apólice', 'Data de Contratação', 'Descrição de Acionamento'];
+  const tableHeaders = ['ID', 'Número', 'Valor', 'Data de Contratação', 'Descrição de Acionamento', 'Cartao ID'];
   const tableData = policies.map(policy => ({
     "id": policy.id,
-    "numero": policy.numero,
-    "dataContratacao": format(new Date(policy.dataContratacao), 'dd/MM/yyyy'),
-    "descricaoAcionamento": policy.descricaoAcionamento
+    "numero": policy.number,
+    "valor": policy.value,
+    "dataContratacao": format(new Date(policy.hiringDate), 'dd/MM/yyyy'),
+    "descricaoAcionamento": policy.driveDescription
   }));
 
   const editPolicy = (id: number): void => {
@@ -57,8 +60,16 @@ export const Apolices = () => {
   };
 
   const handleCreateButtonClick = (): void => {
-    console.log("Botão create clicado");
-  }
+    setIsModalVisible(true);
+  };
+
+  const handleModalClose = (): void => {
+    setIsModalVisible(false);
+  };
+
+  const addPolicy = (newPolicy: any): void => {
+    setPolicies([...policies, newPolicy]);
+  };
 
   const tabsItems = [
     {
@@ -67,7 +78,7 @@ export const Apolices = () => {
       children: <Table
                   tableHeaders={tableHeaders}
                   tableData={tableData}
-                  variavelId="id"
+                  variableId="id"
                   editT={editPolicy}
                   deleteT={deletePolicy}
                   loading={loading}
@@ -89,6 +100,13 @@ export const Apolices = () => {
           <Tabs defaultActiveKey="1" items={tabsItems}>
           </Tabs>
         </div>
+        <Modal
+          open={isModalVisible}
+          onCancel={handleModalClose}
+          footer={null}
+        >
+          <PolicyForm setIsModalVisible={setIsModalVisible} addPolicy={addPolicy}/>
+        </Modal>
       </div>
   );
 };

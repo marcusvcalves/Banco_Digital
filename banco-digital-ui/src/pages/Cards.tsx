@@ -1,18 +1,21 @@
 import { useEffect, useState } from "react"
 import { axiosInstance } from "../api/axios";
 import { Table } from "../components/TableComponents/Table";
-import { Tabs } from "antd";
+import { Modal, Tabs } from "antd";
+import { CardForm } from "../components/CardForm";
 
-interface CardProps {
+interface Card {
   id: number,
-  statusCartao: number,
-  numero: string,
-  contaId: number
+  number: string,
+  cardType: number,
+  activeCard: boolean,
+  accountId: number
 }
 
-export const Cartoes = () => {
-  const [cards, setCards] = useState<CardProps[]>([]);
+export const Cards = () => {
+  const [cards, setCards] = useState<Card[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   const getCards = (): void => {
     setLoading(true);
@@ -31,12 +34,13 @@ export const Cartoes = () => {
     getCards();
   }, []);
 
-  const tableHeaders = ['ID', 'Status do Cartão', 'Número', 'Conta ID'];
+  const tableHeaders = ['ID', 'Número', 'Tipo do Cartão', 'Cartão Ativo', 'Conta ID'];
   const tableData = cards.map(card => ({
     "id": card.id,
-    "statusCartao": card.statusCartao,
-    "numero": card.numero,
-    "contaId": card.contaId
+    "numero": card.number,
+    "tipoCartao": card.cardType,
+    "cartaoAtivo": card.activeCard,
+    "contaId": card.accountId
   }));
 
   const editCard = (id: number): void => {
@@ -55,7 +59,15 @@ export const Cartoes = () => {
   };
 
   const handleCreateButtonClick = (): void => {
-    console.log("Botão create clicado");
+    setIsModalVisible(true);
+  };
+
+  const handleModalClose = (): void => {
+    setIsModalVisible(false);
+  };
+
+  const addCard = (newCard: any): void => {
+    setCards([...cards, newCard])
   }
 
   const tabsItems = [
@@ -65,7 +77,7 @@ export const Cartoes = () => {
       children: <Table
                   tableHeaders={tableHeaders}
                   tableData={tableData}
-                  variavelId="id"
+                  variableId="id"
                   editT={editCard}
                   deleteT={deleteCard}
                   loading={loading}
@@ -88,6 +100,13 @@ export const Cartoes = () => {
           <Tabs defaultActiveKey="1" items={tabsItems}>
           </Tabs>
         </div>
+        <Modal
+          open={isModalVisible}
+          onCancel={handleModalClose}
+          footer={null}
+        >
+          <CardForm setIsModalVisible={setIsModalVisible} addCard={addCard}/>
+        </Modal>
       </div>
   );
 };
