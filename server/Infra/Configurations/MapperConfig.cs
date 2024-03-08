@@ -1,8 +1,5 @@
 using AutoMapper;
-using Domain.Models.DTO.ApoliceSeguroDTO;
-using Domain.Models.DTO.CartaoDTO;
-using Domain.Models.DTO.ClienteDTO;
-using Domain.Models.DTO.ContaDTO;
+using Domain.Models.DTOs;
 using Domain.Models.Entities;
 
 namespace Infra.Configurations
@@ -11,11 +8,11 @@ namespace Infra.Configurations
     {
         public MapperConfig()
         {
-            CreateMap<Apolice, GetApoliceDto>().ReverseMap();
-            CreateMap<Cartao, GetCartaoDto>().ReverseMap();
-            CreateMap<Cliente, GetClienteDto>()
-                .ForMember(dest => dest.TipoCliente, opt => opt.MapFrom(src => src.TipoClienteString));
-            CreateMap<Conta, GetContaDto>().ReverseMap();
+            CreateMap<Policy, GetPolicyDto>().ReverseMap();
+            CreateMap<Card, GetCardDto>().ReverseMap();
+            CreateMap<Client, GetClientDto>()
+                .ForMember(dest => dest.ClientType, opt => opt.MapFrom(src => src.ClientTypeString));
+            CreateMap<Account, GetAccountDto>().ReverseMap();
         }
     }
 }

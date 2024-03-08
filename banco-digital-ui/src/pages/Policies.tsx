@@ -10,7 +10,7 @@ interface Policy{
   number: string,
   hiringDate: string,
   value: number,
-  driveDescription: string
+  triggerDescription: string
 }
 
 export const Policies = () => {
@@ -35,13 +35,13 @@ export const Policies = () => {
     getPolicies();
   }, []);
 
-  const tableHeaders = ['ID', 'Número', 'Valor', 'Data de Contratação', 'Descrição de Acionamento', 'Cartao ID'];
+  const tableHeaders = ['ID', 'Número', 'Valor', 'Data de Contratação', 'Descrição de Acionamento', 'Cartão ID'];
   const tableData = policies.map(policy => ({
     "id": policy.id,
     "numero": policy.number,
     "valor": policy.value,
     "dataContratacao": format(new Date(policy.hiringDate), 'dd/MM/yyyy'),
-    "descricaoAcionamento": policy.driveDescription
+    "descricaoAcionamento": policy.triggerDescription
   }));
 
   const editPolicy = (id: number): void => {

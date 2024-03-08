@@ -38,10 +38,10 @@ builder.Services.AddSwaggerGen(options =>
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
 
-builder.Services.AddScoped<IApoliceRepository, ApoliceRepository>();
-builder.Services.AddScoped<ICartaoRepository, CartaoRepository>();
-builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
-builder.Services.AddScoped<IContaRepository, ContaRepository>();
+builder.Services.AddScoped<IPolicyRepository, PolicyRepository>();
+builder.Services.AddScoped<ICardRepository, CardRepository>();
+builder.Services.AddScoped<IClientRepository, ClientRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
 builder.Services.AddAutoMapper(typeof(MapperConfig));
 

@@ -9,51 +9,51 @@ public class AppDbContext : DbContext
     {
     }
 
-    public DbSet<Apolice> Apolices { get; set; }
-    public DbSet<Cartao> Cartoes { get; set; }
-    public DbSet<Cliente> Clientes { get; set; }
-    public DbSet<Conta> Contas { get; set; }
+    public DbSet<Policy> Policies { get; set; }
+    public DbSet<Card> Cards { get; set; }
+    public DbSet<Client> Clients { get; set; }
+    public DbSet<Account> Accounts { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         base.OnModelCreating(modelBuilder);
         
-        modelBuilder.Entity<Apolice>()
-            .Property(a => a.Valor)
+        modelBuilder.Entity<Policy>()
+            .Property(a => a.Value)
             .HasColumnType("decimal(18, 2)");
 
-        modelBuilder.Entity<Cliente>()
-            .Property(c => c.TipoCliente)
+        modelBuilder.Entity<Client>()
+            .Property(c => c.ClientType)
             .HasConversion<string>();
 
-        modelBuilder.Entity<Conta>()
-            .HasDiscriminator<string>("TipoConta")
-            .HasValue<ContaCorrente>("corrente")
-            .HasValue<ContaPoupanca>("poupanca");
+        modelBuilder.Entity<Account>()
+            .HasDiscriminator<string>("AccountType")
+            .HasValue<CheckingAccount>("checking")
+            .HasValue<SavingsAccount>("savings");
         
-        modelBuilder.Entity<Conta>()
-            .Property(c => c.Saldo)
+        modelBuilder.Entity<Account>()
+            .Property(c => c.Balance)
             .HasColumnType("decimal(18, 2)");
         
-        modelBuilder.Entity<ContaCorrente>()
-            .Property(c => c.TaxaMensal)
+        modelBuilder.Entity<CheckingAccount>()
+            .Property(c => c.MonthlyFee)
             .HasColumnType("decimal(18, 2)");
 
-        modelBuilder.Entity<ContaPoupanca>()
-            .Property(c => c.TaxaRendimento)
+        modelBuilder.Entity<SavingsAccount>()
+            .Property(c => c.ReturnRates)
             .HasColumnType("decimal(18, 2)");
 
-        modelBuilder.Entity<Cartao>()
-            .HasDiscriminator<string>("TipoCartao")
-            .HasValue<CartaoDebito>("debito")
-            .HasValue<CartaoCredito>("credito");
+        modelBuilder.Entity<Card>()
+            .HasDiscriminator<string>("CardType")
+            .HasValue<DebitCard>("debito")
+            .HasValue<CreditCard>("credito");
         
 
-        modelBuilder.Entity<CartaoDebito>()
-            .Property(c => c.LimiteDiario)
+        modelBuilder.Entity<DebitCard>()
+            .Property(c => c.DailyLimit)
             .HasColumnType("decimal(18, 2)");
 
-        modelBuilder.Entity<CartaoCredito>()
-            .Property(c => c.LimiteCredito)
+        modelBuilder.Entity<CreditCard>()
+            .Property(c => c.CreditLimit)
             .HasColumnType("decimal(18, 2)");
     }
 }

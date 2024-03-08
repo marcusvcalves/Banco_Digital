@@ -12,7 +12,7 @@ type PolicyInputs = {
     number: string;
     hiringDate: string;
     value: number;
-    driveDescription: string;
+    triggerDescription: string;
     cardId: string;
 }
 
@@ -71,8 +71,8 @@ export const PolicyForm = ({ setIsModalVisible, addPolicy}: PolicyPageProps) => 
             <label htmlFor="value" className="block text-gray-700 font-bold mb-2">Valor<span className="text-red-600">*</span></label>
             <input type="number" id="value" {...register("value")} className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4" required aria-required="true"/>
 
-            <label htmlFor="driveDescription" className="block text-gray-700 font-bold mb-2">Descrição de Acionamento<span className="text-red-600">*</span></label>
-            <input type="text" id="driveDescription" {...register("driveDescription")} className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4" required aria-required="true"/>
+            <label htmlFor="triggerDescription" className="block text-gray-700 font-bold mb-2">Descrição de Acionamento<span className="text-red-600">*</span></label>
+            <input type="text" id="triggerDescription" {...register("triggerDescription")} className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4" required aria-required="true"/>
 
 
             <label htmlFor="card" className="block text-gray-700 font-bold mb-2">Cartão<span className="text-red-600">*</span></label>
