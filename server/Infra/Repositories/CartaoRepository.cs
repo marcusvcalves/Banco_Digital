@@ -35,7 +35,7 @@ public class CartaoRepository : ICartaoRepository
 
         if (cartaoExistente != null)
         {
-            cartaoExistente.StatusCartao = cartao.StatusCartao;
+            cartaoExistente.CartaoAtivo = cartao.CartaoAtivo;
             cartaoExistente.Senha = cartao.Senha;
             
             _context.Entry(cartaoExistente).State = EntityState.Modified;

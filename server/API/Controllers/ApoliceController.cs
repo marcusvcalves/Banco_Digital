@@ -59,8 +59,10 @@ namespace API.Controllers
         public async Task<IActionResult> Create(Apolice apolice)
         {
             Apolice novaApolice = await _apoliceRepository.CreateAsync(apolice);
+            
+            GetApoliceDto getApoliceDto = _mapper.Map<GetApoliceDto>(novaApolice);
 
-            return CreatedAtAction(nameof(GetById), new { id = apolice.Id }, novaApolice);
+            return CreatedAtAction(nameof(GetById), new { id = apolice.Id }, getApoliceDto);
         }
         
         /// <summary>

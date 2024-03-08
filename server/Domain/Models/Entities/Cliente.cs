@@ -5,9 +5,9 @@ namespace Domain.Models.Entities
 {
     public enum TipoCliente
     {
-        Comum,
-        Super,
-        Premium
+        Comum = 0,
+        Super = 1,
+        Premium = 2
     }
 
     public class Cliente

@@ -57,9 +57,11 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] Cartao cartao)
         {
-            Cartao novoCartao = await _cartaoRepository.CreateAsync(cartao); 
+            Cartao novoCartao = await _cartaoRepository.CreateAsync(cartao);
+            
+            GetCartaoDto getCartaoDto = _mapper.Map<GetCartaoDto>(novoCartao);
 
-            return CreatedAtAction(nameof(GetById), new { id = novoCartao.Id }, novoCartao);
+            return CreatedAtAction(nameof(GetById), new { id = novoCartao.Id }, getCartaoDto);
         }
         
         /// <summary>

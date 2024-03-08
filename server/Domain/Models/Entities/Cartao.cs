@@ -1,15 +1,10 @@
 ﻿namespace Domain.Models.Entities
 {
-    public enum StatusCartao
-    {
-        Ativado,
-        Desativado
-    }
-
+    
     public class Cartao
     {
         public int Id { get; set; }
-        public StatusCartao StatusCartao { get; set; }
+        public bool CartaoAtivo { get; set; }
         public string? Numero { get; set; }
         public string? Senha { get; set; }
         public int ContaId { get; set; }

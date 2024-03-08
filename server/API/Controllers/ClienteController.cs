@@ -59,7 +59,9 @@ namespace API.Controllers
         {
             Cliente novoCliente = await _clienteRepository.CreateAsync(cliente); 
 
-            return CreatedAtAction(nameof(GetById), new { id = novoCliente.Id }, novoCliente);
+            GetClienteDto getClienteDto = _mapper.Map<GetClienteDto>(novoCliente);
+            
+            return CreatedAtAction(nameof(GetById), new { id = novoCliente.Id }, getClienteDto);
         }
         
         /// <summary>
@@ -81,7 +83,7 @@ namespace API.Controllers
 
             GetClienteDto getClienteDto = _mapper.Map<GetClienteDto>(clienteExistente);
             
-            return Ok(clienteExistente);
+            return Ok(getClienteDto);
         }
         
         /// <summary>

@@ -3,6 +3,7 @@
     public class Conta
     {
         public int Id { get; set; }
+        public string? Numero { get; set; }
         public string? Senha { get; set; }
         public decimal Saldo { get; set; }
         public DateTime DataCriacao { get; set; }
