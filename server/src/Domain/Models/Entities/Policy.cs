@@ -7,7 +7,7 @@
         public DateTime HiringDate { get; set; }
         public decimal Value { get; set; }
         public string? TriggeringDescription { get; set; }
-        public int CardId { get; set; }
-        public Card? Card { get; set; }
+        public int CreditCardId { get; set; }
+        public CreditCard? CreditCard { get; set; }
     }
 }

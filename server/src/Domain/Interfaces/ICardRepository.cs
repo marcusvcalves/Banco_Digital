@@ -6,7 +6,7 @@ public interface ICardRepository
 {
     Task<List<Card>> GetAllAsync();
     Task<Card?> GetByIdAsync(int id);
-    Task<Card> CreateAsync(Card newCard);
-    Task UpdateAsync(int id, Card card);
-    Task DeleteAsync(int id);
+    Task<T> CreateAsync<T>(T newCard) where T : Card;
+    Task UpdateAsync(Card card);
+    Task DeleteAsync(Card card);
 }
