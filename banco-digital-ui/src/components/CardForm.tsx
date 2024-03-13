@@ -2,11 +2,9 @@ import { TextField } from "@mui/material";
 import { axiosInstance } from "../api/axios";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
+import { Account } from "../types/Account";
+import { Card } from "../types/Card";
 
-type Account = {
-    id: number;
-    number: string;
-}
 
 type CardInputs = {
     password: string;
@@ -19,16 +17,19 @@ type CardInputs = {
 
 interface CardPageProps{
     setIsModalVisible(visible: boolean): void;
-    addCard(newCard: CardInputs): void;
+    addCard(newCard: CardInputs | Card): void;
 }
 
 export const CardForm = ({ setIsModalVisible, addCard}: CardPageProps) => {
-    const { register, handleSubmit, setValue, reset } = useForm<CardInputs>();
+    const { register, handleSubmit, getValues, setValue, reset } = useForm<CardInputs>();
     const [accountList, setAccountList] = useState<Account[]>([]);
+    const [selectedAccountId, setSelectedAccountId] = useState<string>("");
+    const [selectedActiveCard, setSelectedActiveCard] = useState<string>("");
+    const [selectedCardType, setSelectedCardType] = useState<string>("");
 
     const fetchAccountList = async () => {
         try {
-            const response = await axiosInstance.get("/api/v1/contas");
+            const response = await axiosInstance.get("/api/v1/contas");      
             setAccountList(response.data.$values);
         } catch (error) {
             console.error("Erro ao buscar lista de contas:", error);
@@ -42,19 +43,34 @@ export const CardForm = ({ setIsModalVisible, addCard}: CardPageProps) => {
     const handleAccountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedAccount = accountList.find(account => account.number === e.target.value);
         if (selectedAccount) {
-            setValue("accountId", selectedAccount.id.toString());
+            setSelectedAccountId(selectedAccount.id.toString());
         }
     };
+    
+    const handleStatusSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const value = event.target.value;
+        setSelectedActiveCard(value);
+        setValue("activeCard", value === "true");
+    };
 
-    const onFormSubmit: SubmitHandler<CardInputs> = (data) => {
-        console.log(data);
+    const handleCardTypeSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const value = event.target.value;
+        setSelectedCardType(value);
+        setValue("cardType", value);
+    };
 
-        axiosInstance.post('/api/v1/cartoes', data)
+    const onFormSubmit: SubmitHandler<CardInputs> = async () => {
+        const formData = getValues();
+        formData.accountId = selectedAccountId;
+        console.log(formData);
+
+        await axiosInstance.post('/api/v1/cartoes', formData)
         .then((res) =>{
-            console.log(res.data);
             addCard(res.data);
             setIsModalVisible(false);
             reset();
+            setSelectedActiveCard("");
+            setSelectedCardType("");
         })
         .catch((error) =>{
             console.log(error);
@@ -72,22 +88,46 @@ export const CardForm = ({ setIsModalVisible, addCard}: CardPageProps) => {
             <label htmlFor="confirmPassword" className="block text-gray-700 font-bold mb-2">Confirmar Senha<span className="text-red-600">*</span></label>
             <input type="password" id="confirmPassword" {...register("confirmPassword")} className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4" required aria-required="true"/>
 
-            <label htmlFor="cardType" className="block text-gray-700 font-bold mb-2">Tipo de Cartão<span className="text-red-600">*</span></label>
-            <div className="mb-6 mt-4">
-                <input type="radio" id="debito" checked={true} value="debito" {...register("cardType")} className="mr-2 leading-tight"/>
-                <label htmlFor="debito" className="mr-4">Débito</label>
-                <input type="radio" id="credito" value="credito" {...register("cardType")} className="mr-2 leading-tight"/>
-                <label htmlFor="credito">Crédito</label>
+            <div>
+                <label htmlFor="cardType" className="block text-gray-700 font-bold mb-2">
+                Tipo de Cartão<span className="text-red-600">*</span>
+                </label>
+                <select
+                    id="cardType"
+                    value={selectedCardType}
+                    onChange={handleCardTypeSelectChange}
+                    className="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"
+                    required
+                >
+                    <option value="" disabled hidden>
+                        Selecione...
+                    </option>
+                    <option value="Debit">Débito</option>
+                    <option value="Credit">Crédito</option>
+                </select>
             </div>
 
 
-            <label htmlFor="activeCard" className="block text-gray-700 font-bold mb-2">Cartão Ativo<span className="text-red-600">*</span></label>
-            <div className="mb-6 mt-4">
-                <input type="radio" id="ativo" checked={true} value="true" {...register("activeCard")} className="mr-2 leading-tight"/>
-                <label htmlFor="ativo" className="mr-4">Ativo</label>
-                <input type="radio" id="inativo" value="false" {...register("activeCard")} className="mr-2 leading-tight"/>
-                <label htmlFor="inativo">Inativo</label>
+            <div>
+                <label htmlFor="activeCard" className="block text-gray-700 font-bold mb-2">
+                    Status do Cartão<span className="text-red-600">*</span>
+                </label>
+                <select
+                    id="activeCard"
+                    value={selectedActiveCard}
+                    onChange={handleStatusSelectChange}
+                    className="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"
+                    required
+                >
+                    <option value="" disabled hidden>
+                        Selecione...
+                    </option>
+                    <option value="true">Ativo</option>
+                    <option value="false">Inativo</option>
+                </select>
             </div>
+
+
 
             <label htmlFor="account" className="block text-gray-700 font-bold mb-2">Conta<span className="text-red-600">*</span></label>
             <TextField

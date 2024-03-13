@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { IconContext } from "react-icons";
 import { BsBank2 } from "react-icons/bs";
 
+
 export const Navbar = () => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

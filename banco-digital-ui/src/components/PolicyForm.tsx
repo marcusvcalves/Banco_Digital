@@ -2,23 +2,22 @@ import { useState, useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { TextField } from "@mui/material";
 import { axiosInstance } from "../api/axios";
+import { Card } from "../types/Card";
+import { Policy } from "../types/Policy";
+import { CreditCard } from "../types/CreditCard";
 
-type Card = {
-    id: number;
-    number: string;
-}
 
 type PolicyInputs = {
     number: string;
     hiringDate: string;
     value: number;
-    triggerDescription: string;
-    cardId: string;
+    triggeringDescription: string;
+    creditCardId: string;
 }
 
 interface PolicyPageProps{
     setIsModalVisible(visible: boolean): void;
-    addPolicy(newPolicy: PolicyInputs): void;
+    addPolicy(newPolicy: PolicyInputs | Policy): void;
 }
 
 export const PolicyForm = ({ setIsModalVisible, addPolicy}: PolicyPageProps) => {
@@ -28,7 +27,8 @@ export const PolicyForm = ({ setIsModalVisible, addPolicy}: PolicyPageProps) => 
     const fetchCardList = async () => {
         try {
             const response = await axiosInstance.get("/api/v1/cartoes");
-            setCardList(response.data.$values);
+            const creditCards: Card[] = response.data.$values.filter((card: Card) => card.cardType === "Credit");
+            setCardList(creditCards);
         } catch (error) {
             console.error("Erro ao buscar lista de cartões:", error);
         }
@@ -41,14 +41,14 @@ export const PolicyForm = ({ setIsModalVisible, addPolicy}: PolicyPageProps) => 
     const handleCardChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedCard = cardList.find(card => card.number === e.target.value);
         if (selectedCard) {
-            setValue("cardId", selectedCard.id.toString());
+            setValue("creditCardId", selectedCard.id.toString());
         }
     };
 
-    const onFormSubmit: SubmitHandler<PolicyInputs> = (data) => {
+    const onFormSubmit: SubmitHandler<PolicyInputs> = async (data) => {
         console.log(data);
 
-        axiosInstance.post('/api/v1/apolices', data)
+        await axiosInstance.post('/api/v1/apolices', data)
         .then((res) =>{
             console.log(res.data);
             addPolicy(res.data);
@@ -71,8 +71,8 @@ export const PolicyForm = ({ setIsModalVisible, addPolicy}: PolicyPageProps) => 
             <label htmlFor="value" className="block text-gray-700 font-bold mb-2">Valor<span className="text-red-600">*</span></label>
             <input type="number" id="value" {...register("value")} className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4" required aria-required="true"/>
 
-            <label htmlFor="triggerDescription" className="block text-gray-700 font-bold mb-2">Descrição de Acionamento<span className="text-red-600">*</span></label>
-            <input type="text" id="triggerDescription" {...register("triggerDescription")} className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4" required aria-required="true"/>
+            <label htmlFor="triggeringDescription" className="block text-gray-700 font-bold mb-2">Descrição de Acionamento<span className="text-red-600">*</span></label>
+            <input type="text" id="triggeringDescription" {...register("triggeringDescription")} className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4" required aria-required="true"/>
 
 
             <label htmlFor="card" className="block text-gray-700 font-bold mb-2">Cartão<span className="text-red-600">*</span></label>
