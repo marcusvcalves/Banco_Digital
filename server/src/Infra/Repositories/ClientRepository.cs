@@ -31,32 +31,16 @@ public class ClientRepository : IClientRepository
         return newClient;
     }
 
-    public async Task UpdateAsync(int id, Client client)
+    public async Task UpdateAsync(Client client)
     {
-        Client? existingClient = await GetByIdAsync(id);
-        
-        if (existingClient != null)
-        {
-            existingClient.Cpf = client.Cpf;
-            existingClient.Name = client.Name;
-            existingClient.BirthDate = client.BirthDate;
-            existingClient.Address = client.Address;
-                
-            _context.Entry(existingClient).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
+        _context.Entry(client).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
     }
 
 
-    public async Task DeleteAsync(int id)
+    public async Task DeleteAsync(Client client)
     {
-        Client? client = await GetByIdAsync(id);
-
-        if (client != null)
-        {
-            _context.Clients.Remove(client);
-
-            await _context.SaveChangesAsync();
-        }
+        _context.Clients.Remove(client);
+        await _context.SaveChangesAsync();
     }
 }

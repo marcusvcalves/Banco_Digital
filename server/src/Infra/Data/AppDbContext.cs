@@ -26,7 +26,7 @@ public class AppDbContext : DbContext
             .HasConversion<string>();
 
         modelBuilder.Entity<Account>()
-            .HasDiscriminator<string>("AccountType")
+            .HasDiscriminator<string>("accountType")
             .HasValue<CheckingAccount>("checking")
             .HasValue<SavingsAccount>("savings");
         
@@ -43,7 +43,7 @@ public class AppDbContext : DbContext
             .HasColumnType("decimal(18, 2)");
 
         modelBuilder.Entity<Card>()
-            .HasDiscriminator<string>("CardType")
+            .HasDiscriminator<string>("cardType")
             .HasValue<DebitCard>("debito")
             .HasValue<CreditCard>("credito");
         

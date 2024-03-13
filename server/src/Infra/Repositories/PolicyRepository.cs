@@ -16,7 +16,7 @@ public class PolicyRepository : IPolicyRepository
     
     public async Task<List<Policy>> GetAllAsync()
     {
-        return await _context.Policies.ToListAsync();
+        return await _context.Policies.Include(policy => policy.CreditCard).ToListAsync();
     }
 
     public async Task<Policy?> GetByIdAsync(int id)
@@ -32,30 +32,15 @@ public class PolicyRepository : IPolicyRepository
         return newPolicy;
     }
 
-    public async Task UpdateAsync(int id, Policy policy)
+    public async Task UpdateAsync(Policy policy)
     {
-        Policy? existingPolicy = await GetByIdAsync(id);
-
-        if (existingPolicy != null)
-        {
-            existingPolicy.Number = policy.Number;
-            existingPolicy.Value = policy.Value;
-            existingPolicy.TriggeringDescription = policy.TriggeringDescription;
-
-            _context.Entry(existingPolicy).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
+        _context.Entry(policy).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task DeleteAsync(Policy policy)
     {
-        Policy? policy = await GetByIdAsync(id);
-
-        if (policy != null)
-        {
-            _context.Policies.Remove(policy);
-
-            await _context.SaveChangesAsync();
-        }
+        _context.Policies.Remove(policy);
+        await _context.SaveChangesAsync();
     }
 }

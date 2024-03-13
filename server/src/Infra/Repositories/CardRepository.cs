@@ -16,42 +16,28 @@ public class CardRepository : ICardRepository
 
     public async Task<List<Card>> GetAllAsync()
     {
-        return await _context.Cards.ToListAsync();
+        return await _context.Cards.Include(card => card.Account).ToListAsync();
     }
     public async Task<Card?> GetByIdAsync(int id)
     {
         return await _context.Cards.FindAsync(id);
     }
-    public async Task<Card> CreateAsync(Card newCard)
+    
+    public async Task<T> CreateAsync<T>(T newCard) where T : Card
     {
         _context.Cards.Add(newCard);
         await _context.SaveChangesAsync();
 
         return newCard;
     }
-    public async Task UpdateAsync(int id, Card card)
+    public async Task UpdateAsync(Card card)
     {
-        Card? existingCard = await GetByIdAsync(id);
-
-        if (existingCard != null)
-        {
-            existingCard.ActiveCard = card.ActiveCard;
-            existingCard.Password = card.Password;
-            
-            _context.Entry(existingCard).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-
-        }
+        _context.Entry(card).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
     }
-    public async Task DeleteAsync(int id)
+    public async Task DeleteAsync(Card card)
     {
-        Card? card = await GetByIdAsync(id);
-
-        if (card != null)
-        {
-            _context.Cards.Remove(card);
-
-            await _context.SaveChangesAsync();
-        }
+        _context.Cards.Remove(card);
+        await _context.SaveChangesAsync();
     }
 }

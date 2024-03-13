@@ -2,82 +2,55 @@
 using Domain.Models.Entities;
 using Infra.Data;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace Infra.Repositories;
-
-public class AccountRepository : IAccountRepository
+namespace Infra.Repositories
 {
-    private readonly AppDbContext _context;
-    
-    public AccountRepository(AppDbContext context)
+    public class AccountRepository : IAccountRepository
     {
-        _context = context;
-    }
-    
-    public async Task<List<Account>> GetAllAsync()
-    {
-        return await _context.Accounts.ToListAsync();
-    }
+        private readonly AppDbContext _context;
 
-    public async Task<Account?> GetByIdAsync(int id)
-    {
-        return await _context.Accounts.FindAsync(id);
-    }
-
-    public async Task<Account> CreateAsync(Account newAccount)
-    {
-        _context.Accounts.Add(newAccount);
-        await _context.SaveChangesAsync();
-
-        return newAccount;
-    }
-    
-    public async Task TransferAsync(int senderAccountId, int receiverAccountId, decimal amount)
-    {
-        Account? senderAccount = await GetByIdAsync(senderAccountId);
-        Account? receiverAccount = await GetByIdAsync(receiverAccountId);
-
-        if (senderAccount == null || receiverAccount == null)
+        public AccountRepository(AppDbContext context)
         {
-            throw new Exception("Uma ou ambas as contas não foram encontradas.");
+            _context = context;
         }
 
-        if (senderAccount.Balance < amount)
+        public async Task<List<Account>> GetAllAsync()
         {
-            throw new Exception("Saldo insuficiente na conta de origem.");
+            return await _context.Accounts.Include(account => account.Client).ToListAsync();
         }
-        
-        senderAccount.Balance -= amount;
-        receiverAccount.Balance += amount;
 
-        _context.Entry(senderAccount).State = EntityState.Modified;
-        _context.Entry(receiverAccount).State = EntityState.Modified;
-
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task UpdateAsync(int id, Account account)
-    {
-        Account? existingAccount = await GetByIdAsync(id);
-
-        if (existingAccount != null)
+        public async Task<Account?> GetByIdAsync(int id)
         {
-            existingAccount.Balance = account.Balance;
-            existingAccount.Password = account.Password;
-            
-            _context.Entry(existingAccount).State = EntityState.Modified;
+            return await _context.Accounts.FindAsync(id);
+        }
+
+        public async Task<Account> CreateAsync(Account newAccount)
+        {
+            _context.Accounts.Add(newAccount);
+            await _context.SaveChangesAsync();
+
+            return newAccount;
+        }
+
+        public async Task UpdateAsync(Account account)
+        {
+            _context.Entry(account).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
-    }
 
-    public async Task DeleteAsync(int id)
-    {
-        Account? account = await GetByIdAsync(id);
-
-        if (account != null)
+        public async Task DeleteAsync(Account account)
         {
             _context.Accounts.Remove(account);
+            await _context.SaveChangesAsync();
+        }
 
+        public async Task TransferAsync(Account senderAccount, Account receiverAccount, decimal amount)
+        {
+            _context.Entry(senderAccount).State = EntityState.Modified;
+            _context.Entry(receiverAccount).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
     }

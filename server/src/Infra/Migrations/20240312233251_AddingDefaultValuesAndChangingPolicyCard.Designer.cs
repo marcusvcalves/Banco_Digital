@@ -4,6 +4,7 @@ using Infra.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infra.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240312233251_AddingDefaultValuesAndChangingPolicyCard")]
+    partial class AddingDefaultValuesAndChangingPolicyCard
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -137,9 +140,6 @@ namespace Infra.Migrations
                     b.Property<int>("CreditCardId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("DebitCardId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("HiringDate")
                         .HasColumnType("datetime2");
 
@@ -155,8 +155,6 @@ namespace Infra.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreditCardId");
-
-                    b.HasIndex("DebitCardId");
 
                     b.ToTable("Policies");
                 });
@@ -225,15 +223,11 @@ namespace Infra.Migrations
 
             modelBuilder.Entity("Domain.Models.Entities.Policy", b =>
                 {
-                    b.HasOne("Domain.Models.Entities.CreditCard", "CreditCard")
-                        .WithMany()
+                    b.HasOne("Domain.Models.Entities.DebitCard", "CreditCard")
+                        .WithMany("Policies")
                         .HasForeignKey("CreditCardId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Domain.Models.Entities.DebitCard", null)
-                        .WithMany("Policies")
-                        .HasForeignKey("DebitCardId");
 
                     b.Navigation("CreditCard");
                 });
