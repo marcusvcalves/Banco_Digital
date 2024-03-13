@@ -19,11 +19,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="API.http" />
-      <None Remove="Requests.http" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\Domain\Domain.csproj" />
       <ProjectReference Include="..\Infra\Infra.csproj" />
     </ItemGroup>

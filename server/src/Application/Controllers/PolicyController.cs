@@ -1,22 +1,19 @@
-﻿using AutoMapper;
-using Domain.Interfaces;
-using Domain.Models.DTOs;
+﻿using Domain.Models.DTOs;
 using Domain.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Application.Services;
 
-namespace API.Controllers
+namespace Application.Controllers
 {
     [ApiController]
-    [Route(template: "api/v1/apolices")]
+    [Route("api/v1/apolices")]
     public class PolicyController : ControllerBase
     {
-        private readonly IPolicyRepository _policyRepository;
-        private readonly IMapper _mapper;
+        private readonly IPolicyService _policyService;
 
-        public PolicyController(IPolicyRepository policyRepository, IMapper mapper)
+        public PolicyController(IPolicyService policyService)
         {
-            _policyRepository = policyRepository;
-            _mapper = mapper;
+            _policyService = policyService;
         }
 
         /// <summary>
@@ -25,10 +22,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            List<Policy> policies = await _policyRepository.GetAllAsync();
-        
-            var getPoliciesDto = policies.Select(policy => _mapper.Map<GetPolicyDto>(policy));
-
+            IEnumerable<GetPolicyDto> getPoliciesDto = await _policyService.GetAllPoliciesAsync();
             return Ok(getPoliciesDto);
         }
         
@@ -39,30 +33,23 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<GetPolicyDto>> GetById([FromRoute] int id)
         {
-            Policy? policy = await _policyRepository.GetByIdAsync(id);
-
-            if (policy == null)
+            GetPolicyDto getPolicyDto = await _policyService.GetPolicyByIdAsync(id);
+            if (getPolicyDto == null)
             {
                 return NotFound();
             }
-
-            GetPolicyDto getPolicyDto = _mapper.Map<GetPolicyDto>(policy);
-
             return Ok(getPolicyDto);
         }
         
         /// <summary>
         /// Cria uma nova apólice de seguro.
         /// </summary>
-        /// <param name="policy">Os dados da nova apólice de seguro a ser criada.</param>
+        /// <param name="createPolicyDto">Os dados da nova apólice de seguro a ser criada.</param>
         [HttpPost]
-        public async Task<IActionResult> Create(Policy policy)
+        public async Task<IActionResult> Create([FromBody] CreatePolicyDto createPolicyDto)
         {
-            Policy newPolicy = await _policyRepository.CreateAsync(policy);
-            
-            GetPolicyDto getPolicyDto = _mapper.Map<GetPolicyDto>(newPolicy);
-
-            return CreatedAtAction(nameof(GetById), new { id = policy.Id }, getPolicyDto);
+            GetPolicyDto newPolicy = await _policyService.CreatePolicyAsync(createPolicyDto);
+            return CreatedAtAction(nameof(GetById), new { id = newPolicy.Id }, newPolicy);
         }
         
         /// <summary>
@@ -73,18 +60,15 @@ namespace API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update ([FromRoute] int id, [FromBody] Policy policy)
         {
-            Policy? existingPolicy = await _policyRepository.GetByIdAsync(id);
-            
-            if (existingPolicy == null)
+            try
+            {
+                var updatedPolicyDto = await _policyService.UpdatePolicyAsync(id, policy);
+                return Ok(updatedPolicyDto);
+            }
+            catch (Exception)
             {
                 return NotFound();
             }
-        
-            await _policyRepository.UpdateAsync(id, policy);
-        
-            GetPolicyDto getPolicyDto = _mapper.Map<GetPolicyDto>(existingPolicy);
-
-            return Ok(getPolicyDto);
         }
         
         /// <summary>
@@ -94,15 +78,10 @@ namespace API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            Policy? policyToDelete = await _policyRepository.GetByIdAsync(id);
-
-            if (policyToDelete != null)
+            if (await _policyService.DeletePolicyAsync(id))
             {
-                await _policyRepository.DeleteAsync(id);
-            
                 return NoContent();
             }
-
             return NotFound();
         }
     }
