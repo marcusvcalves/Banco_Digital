@@ -1,18 +1,11 @@
 import { Table } from "../components/TableComponents/Table";
 import { axiosInstance } from "../api/axios"
 import { useEffect, useState } from "react";
-import { format } from 'date-fns';
+import { format } from "date-fns";
 import { Modal, Tabs } from "antd";
 import { ClientForm } from "../components/ClientForm";
+import { Client } from "../types/Client";
 
-interface Client {
-  id: number,
-  cpf: string,
-  name: string,
-  birthDate: string,
-  address: string,
-  clientType: string
-}
 
 export const Clients = () => {
   const [clients, setClients] = useState<Client[]>([]);
@@ -36,14 +29,14 @@ export const Clients = () => {
     getClients();
   }, []);
 
-  const tableHeaders = ['ID', 'Nome', 'CPF', 'Data de Nascimento', 'Endereço', 'Tipo de Cliente'];
+  const tableHeaders = ['ID', 'Nome', 'CPF', 'Data de Nascimento', 'Endereço', 'Tipo do Cliente'];
   const tableData = clients.map(client => ({
     "id": client.id,
     "nome": client.name,
     "cpf": client.cpf,
     "dataNascimento": format(new Date(client.birthDate), 'dd/MM/yyyy'),
     "endereco": client.address,
-    "tipoCliente": client.clientType
+    "tipoCliente": client.clientType === "Common" ? "Comum" : client.clientType
   }));
 
   const editClient = (id: number): void => {
@@ -69,7 +62,7 @@ export const Clients = () => {
     setIsModalVisible(false);
   };
 
-  const addClient = (newClient: any): void => {
+  const addClient = (newClient: Client): void => {
     setClients([...clients, newClient]);
   };
 

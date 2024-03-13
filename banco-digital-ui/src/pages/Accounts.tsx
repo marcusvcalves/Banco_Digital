@@ -2,20 +2,13 @@ import { useEffect, useState } from "react";
 import { axiosInstance } from "../api/axios";
 import { format } from "date-fns";
 import { Table } from "../components/TableComponents/Table";
-import { Modal, Tabs } from 'antd';
+import { Modal, Tabs } from "antd";
 import { AccountForm } from "../components/AccountForm";
+import { Account } from "../types/Account";
 
-interface AccountProps {
-  id: number,
-  number: string,
-  balance: number,
-  accountType: string,
-  creationDate: string,
-  clientId: number
-}
 
 export const Accounts = () => {
-  const [accounts, setAccounts] = useState<AccountProps[]>([]);
+  const [accounts, setAccounts] = useState<Account[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
@@ -36,14 +29,14 @@ export const Accounts = () => {
     getAccounts();
   },[]);
 
-  const tableHeaders = ['ID', 'Número', 'Saldo', 'Tipo de Conta', 'Data de Criação', 'Cliente ID'];
+  const tableHeaders = ['ID', 'Número', 'Saldo', 'Tipo de Conta', 'Data de Criação', 'Nome do Cliente'];
   const tableData = accounts.map(account => ({
     "id": account.id,
     "numero": account.number,
     "saldo": `R$ ${account.balance}`,
-    "tipoConta": account.accountType,
+    "tipoConta": account.accountType === "savings" ? "Poupança" : account.accountType === "checking" ? "Corrente" : "Comum",
     "dataCriacao": format(new Date(account.creationDate), 'dd/MM/yyyy'),
-    "clienteId": account.clientId
+    "nomeCliente": account.client.name
   }));
 
   const editAccount = (id: number): void => {
@@ -69,7 +62,7 @@ export const Accounts = () => {
     setIsModalVisible(false);
   };
 
-  const addAccount = (newAccount: any): void => {
+  const addAccount = (newAccount: Account): void => {
     setAccounts([...accounts, newAccount])
   }
 

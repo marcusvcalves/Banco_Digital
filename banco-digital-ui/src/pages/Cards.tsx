@@ -3,14 +3,8 @@ import { axiosInstance } from "../api/axios";
 import { Table } from "../components/TableComponents/Table";
 import { Modal, Tabs } from "antd";
 import { CardForm } from "../components/CardForm";
+import { Card } from "../types/Card";
 
-interface Card {
-  id: number,
-  number: string,
-  cardType: number,
-  activeCard: boolean,
-  accountId: number
-}
 
 export const Cards = () => {
   const [cards, setCards] = useState<Card[]>([]);
@@ -23,6 +17,7 @@ export const Cards = () => {
       .get("/api/v1/cartoes")
       .then((res) => {
         setCards(res.data.$values);
+        console.log(res.data.$values);
         setLoading(false);
       })
       .catch((error) => {
@@ -34,13 +29,13 @@ export const Cards = () => {
     getCards();
   }, []);
 
-  const tableHeaders = ['ID', 'Número', 'Tipo do Cartão', 'Cartão Ativo', 'Conta ID'];
+  const tableHeaders = ['ID', 'Número', 'Tipo do Cartão', 'Status do Cartão', 'Número da Conta'];
   const tableData = cards.map(card => ({
     "id": card.id,
     "numero": card.number,
-    "tipoCartao": card.cardType,
-    "cartaoAtivo": card.activeCard,
-    "contaId": card.accountId
+    "tipoCartao": card.cardType === "Debit" ? "Débito" : card.cardType === "Credit" ? "Crédito" : "Normal",
+    "cartaoAtivo": card.activeCard ? "Ativo" : "Inativo",
+    "contaId": card.account.number
   }));
 
   const editCard = (id: number): void => {
@@ -66,7 +61,7 @@ export const Cards = () => {
     setIsModalVisible(false);
   };
 
-  const addCard = (newCard: any): void => {
+  const addCard = (newCard: Card): void => {
     setCards([...cards, newCard])
   }
 
