@@ -5,6 +5,7 @@ import { Table } from "../components/TableComponents/Table";
 import { Modal, Tabs } from "antd";
 import { AccountForm } from "../components/AccountForm";
 import { Account } from "../types/Account";
+import { Pix } from "../components/Pix";
 
 
 export const Accounts = () => {
@@ -28,16 +29,6 @@ export const Accounts = () => {
   useEffect(() => {
     getAccounts();
   },[]);
-
-  const tableHeaders = ['ID', 'Número', 'Saldo', 'Tipo de Conta', 'Data de Criação', 'Nome do Cliente'];
-  const tableData = accounts.map(account => ({
-    "id": account.id,
-    "numero": account.number,
-    "saldo": `R$ ${account.balance}`,
-    "tipoConta": account.accountType === "savings" ? "Poupança" : account.accountType === "checking" ? "Corrente" : "Comum",
-    "dataCriacao": format(new Date(account.creationDate), 'dd/MM/yyyy'),
-    "nomeCliente": account.client.name
-  }));
 
   const editAccount = (id: number): void => {
     console.log(`editar conta ${id}`)
@@ -66,6 +57,25 @@ export const Accounts = () => {
     setAccounts([...accounts, newAccount])
   }
 
+  const updateAccountBalance = (accountId: number, newBalance: number): void => {
+    const accountIndex = accounts.findIndex((account) => account.id === accountId);
+    if (accountIndex !== -1) {
+      const updatedAccounts = [...accounts];
+      updatedAccounts[accountIndex].balance = newBalance;
+      setAccounts(updatedAccounts);
+    }
+  };
+
+  const tableHeaders = ['ID', 'Número', 'Saldo', 'Tipo de Conta', 'Data de Criação', 'Nome do Cliente'];
+  const tableData = accounts.map(account => ({
+    "id": account.id,
+    "numero": account.number,
+    "saldo": `R$ ${account.balance}`,
+    "tipoConta": account.accountType === "savings" ? "Poupança" : account.accountType === "checking" ? "Corrente" : "Comum",
+    "dataCriacao": format(new Date(account.creationDate), 'dd/MM/yyyy'),
+    "nomeCliente": account.client.name
+  }));
+
   const tabsItems = [
     {
       key: "1",
@@ -83,7 +93,8 @@ export const Accounts = () => {
     },
     {
       key: "2",
-      label: "PIX"
+      label: "PIX",
+      children: <Pix updateAccountBalance={updateAccountBalance}/>
     }
   ]
 
