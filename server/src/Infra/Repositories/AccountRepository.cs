@@ -2,9 +2,6 @@
 using Domain.Models.Entities;
 using Infra.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Infra.Repositories
 {
@@ -52,29 +49,38 @@ namespace Infra.Repositories
             Account? senderAccount = _context.Accounts.FirstOrDefault(acc => acc.Id == senderAccountId);
             Account? receiverAccount = _context.Accounts.FirstOrDefault(acc => acc.Id == receiverAccountId);
             
-            await using var transaction = _context.Database.BeginTransaction();
-
-            try
+            if (senderAccount == null || receiverAccount == null)
             {
-                senderAccount.Balance -= amount;
-                await _context.SaveChangesAsync();
-                
-                receiverAccount.Balance += amount;
-                await _context.SaveChangesAsync();
-                
-                await transaction.CommitAsync();
-                
-                senderAccount = await _context.Accounts.FirstOrDefaultAsync(acc => acc.Id == senderAccountId);
-                receiverAccount = await _context.Accounts.FirstOrDefaultAsync(acc => acc.Id == receiverAccountId);
-
-                return new List<Account> { senderAccount, receiverAccount};
-
+                throw new ArgumentException($"Conta enviante ou recebedora não encontrada.");
             }
-            catch (Exception ex)
+
+            using (var transaction = await _context.Database.BeginTransactionAsync())
             {
-                await transaction.RollbackAsync();
-                throw new Exception($"Erro ao transferir fundos: {ex.Message}.");
-            }
+                try
+                {
+                    senderAccount.Balance -= amount;                
+                    receiverAccount.Balance += amount;
+                    await _context.SaveChangesAsync();
+                
+                    await transaction.CommitAsync();
+                
+                    senderAccount = await _context.Accounts.FirstOrDefaultAsync(acc => acc.Id == senderAccountId);
+                    receiverAccount = await _context.Accounts.FirstOrDefaultAsync(acc => acc.Id == receiverAccountId);
+                
+                    if (senderAccount == null || receiverAccount == null)
+                    {
+                        throw new ArgumentException($"Conta enviante ou recebedora não encontrada.");
+                    }
+
+                    return new List<Account> { senderAccount, receiverAccount};
+
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw new Exception($"Erro ao transferir fundos: {ex.Message}.");
+                }
+            };
         }
     }
 }
