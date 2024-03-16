@@ -76,7 +76,7 @@ namespace Application.Services
             return true;
         }
 
-        public async Task TransferAsync(int senderAccountId, int receiverAccountId, decimal amount)
+        public async Task<List<GetAccountDto>> TransferAsync(int senderAccountId, int receiverAccountId, decimal amount)
         {
             GetAccountDto senderAccountDto = await GetAccountByIdAsync(senderAccountId);
             GetAccountDto receiverAccountDto = await GetAccountByIdAsync(receiverAccountId);
@@ -91,13 +91,17 @@ namespace Application.Services
                 throw new Exception("Saldo insuficiente na conta de origem.");
             }
             
-            Account senderAccount = _mapper.Map<Account>(senderAccountDto);
-            Account receiverAccount = _mapper.Map<Account>(receiverAccountDto);
+            List<Account> accounts = await _accountRepository.TransferAsync(senderAccountId, receiverAccountId, amount);
             
-            senderAccount.Balance -= amount;
-            receiverAccount.Balance += amount;
+            List<GetAccountDto> accountDtos = new List<GetAccountDto>();
             
-            await _accountRepository.TransferAsync(senderAccount, receiverAccount, amount);
+            foreach (Account account in accounts)
+            {
+                GetAccountDto accountDto = _mapper.Map<GetAccountDto>(account);
+                accountDtos.Add(accountDto);
+            }
+
+            return accountDtos;
         }
     }
 }

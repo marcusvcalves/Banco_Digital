@@ -47,11 +47,34 @@ namespace Infra.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task TransferAsync(Account senderAccount, Account receiverAccount, decimal amount)
+        public async Task<List<Account>> TransferAsync(int senderAccountId, int receiverAccountId, decimal amount)
         {
-            _context.Entry(senderAccount).State = EntityState.Modified;
-            _context.Entry(receiverAccount).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            Account? senderAccount = _context.Accounts.FirstOrDefault(acc => acc.Id == senderAccountId);
+            Account? receiverAccount = _context.Accounts.FirstOrDefault(acc => acc.Id == receiverAccountId);
+            
+            await using var transaction = _context.Database.BeginTransaction();
+
+            try
+            {
+                senderAccount.Balance -= amount;
+                await _context.SaveChangesAsync();
+                
+                receiverAccount.Balance += amount;
+                await _context.SaveChangesAsync();
+                
+                await transaction.CommitAsync();
+                
+                senderAccount = await _context.Accounts.FirstOrDefaultAsync(acc => acc.Id == senderAccountId);
+                receiverAccount = await _context.Accounts.FirstOrDefaultAsync(acc => acc.Id == receiverAccountId);
+
+                return new List<Account> { senderAccount, receiverAccount};
+
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception($"Erro ao transferir fundos: {ex.Message}.");
+            }
         }
     }
 }

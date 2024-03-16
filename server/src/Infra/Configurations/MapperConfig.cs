@@ -24,7 +24,8 @@ namespace Infra.Configurations
                 .ForMember(dest => dest.AccountType, opt => opt.MapFrom(src =>
                     (src is CheckingAccount) ? "checking" :
                     (src is SavingsAccount) ? "savings" :
-                    null));
+                    null))
+                .ReverseMap();
                     
             CreateMap<CreateAccountDto, Account>()
                 .ForMember(dest => dest.ClientId, opt => opt.MapFrom(src => src.ClientId))

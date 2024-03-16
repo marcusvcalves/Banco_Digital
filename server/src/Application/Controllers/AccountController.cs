@@ -99,8 +99,8 @@ namespace Application.Controllers
         {
             try
             {
-                await _accountService.TransferAsync(senderAccountId, receiverAccountId, amount);
-                return Ok();
+                var accounts = await _accountService.TransferAsync(senderAccountId, receiverAccountId, amount);
+                return Ok(accounts);
             }
             catch (Exception ex)
             {

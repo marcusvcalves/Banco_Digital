@@ -10,7 +10,7 @@ namespace Application.Services
         Task<GetAccountDto> CreateAccountAsync(CreateAccountDto createAccountDto);
         Task<GetAccountDto> UpdateAccountAsync(int id, Account account);
         Task<bool> DeleteAccountAsync(int id);
-        Task TransferAsync(int senderAccountId, int receiverAccountId, decimal amount);
+        Task<List<GetAccountDto>> TransferAsync(int senderAccountId, int receiverAccountId, decimal amount);
     }
 }
 
