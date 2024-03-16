@@ -74,7 +74,7 @@ namespace Application.Services
             return _mapper.Map<GetCardDto>(existingCard);
         }
 
-        public async Task<bool> DeleteCardAsync(int id)
+        public async Task DeleteCardAsync(int id)
         {
             Card? cardToDelete = await _cardRepository.GetByIdAsync(id);
 
@@ -82,7 +82,6 @@ namespace Application.Services
                 throw new ArgumentException("O cartão especificado não existe.");
 
             await _cardRepository.DeleteAsync(cardToDelete);
-            return true;
         }
     }
 }

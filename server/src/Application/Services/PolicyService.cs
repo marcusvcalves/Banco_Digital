@@ -52,6 +52,7 @@ namespace Application.Services
         public async Task<GetPolicyDto> UpdatePolicyAsync(int id, Policy policy)
         {
             var existingPolicy = await _policyRepository.GetByIdAsync(id);
+            
             if (existingPolicy == null)
                 throw new ArgumentException("Apólice não encontrada");
 
@@ -63,16 +64,16 @@ namespace Application.Services
             return _mapper.Map<GetPolicyDto>(existingPolicy);
         }
 
-        public async Task<bool> DeletePolicyAsync(int id)
+        public async Task DeletePolicyAsync(int id)
         {
             var existingPolicy = await _policyRepository.GetByIdAsync(id);
+            
             if (existingPolicy == null)
             {
                 throw new ArgumentException("Apólice não encontrada");
             }
 
             await _policyRepository.DeleteAsync(existingPolicy);
-            return true;
         }
     }
 }

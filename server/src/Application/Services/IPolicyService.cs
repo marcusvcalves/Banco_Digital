@@ -9,5 +9,5 @@ public interface IPolicyService
     Task<GetPolicyDto> GetPolicyByIdAsync(int id);
     Task<GetPolicyDto> CreatePolicyAsync(CreatePolicyDto createPolicyDto);
     Task<GetPolicyDto> UpdatePolicyAsync(int id, Policy policy);
-    Task<bool> DeletePolicyAsync(int id);
+    Task DeletePolicyAsync(int id);
 }

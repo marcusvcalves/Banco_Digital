@@ -24,7 +24,7 @@ namespace Application.Services
 
         public async Task<GetClientDto> GetClientByIdAsync(int id)
         {
-            var client = await _clientRepository.GetByIdAsync(id);
+            Client? client = await _clientRepository.GetByIdAsync(id);
             return _mapper.Map<GetClientDto>(client);
         }
 
@@ -63,7 +63,7 @@ namespace Application.Services
             return _mapper.Map<GetClientDto>(existingClient);
         }
 
-        public async Task<bool> DeleteClientAsync(int id)
+        public async Task DeleteClientAsync(int id)
         {
             Client? clientToDelete = await _clientRepository.GetByIdAsync(id);
 
@@ -73,8 +73,6 @@ namespace Application.Services
             }
 
             await _clientRepository.DeleteAsync(clientToDelete);
-
-            return true;
         }
     }
 }

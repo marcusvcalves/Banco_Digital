@@ -9,6 +9,6 @@ namespace Application.Services
         Task<GetCardDto> GetCardByIdAsync(int id);
         Task<GetCardDto> CreateCardAsync(CreateCardDto createCardDto);
         Task<GetCardDto> UpdateCardAsync(int id, Card card);
-        Task<bool> DeleteCardAsync(int id);
+        Task DeleteCardAsync(int id);
     }
 }

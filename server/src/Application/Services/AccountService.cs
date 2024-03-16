@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models.DTOs;
 using Domain.Models.Entities;
@@ -83,12 +84,12 @@ namespace Application.Services
             
             if (senderAccountDto == null || receiverAccountDto == null)
             {
-                throw new Exception("Uma ou ambas as contas não foram encontradas.");
+                throw new AccountNotFoundException("Uma ou ambas as contas não foram encontradas.");
             }
 
             if (senderAccountDto.Balance < amount)
             {
-                throw new Exception("Saldo insuficiente na conta de origem.");
+                throw new InsufficientBalanceException("Saldo insuficiente na conta de origem.");
             }
             
             List<Account> accounts = await _accountRepository.TransferAsync(senderAccountId, receiverAccountId, amount);
