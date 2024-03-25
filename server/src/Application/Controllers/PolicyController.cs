@@ -17,7 +17,7 @@ namespace Application.Controllers
         }
 
         /// <summary>
-        /// Retorna todas as apólices de seguro.
+        /// Retorna todas as apólices de seguro
         /// </summary>
         /// <response code="200">Retorna lista com os DTOs de todas as apólices</response>
         [HttpGet]
@@ -28,9 +28,9 @@ namespace Application.Controllers
         }
         
         /// <summary>
-        /// Retorna a apólice de seguro com o ID especificado.
+        /// Retorna a apólice de seguro com o ID especificado
         /// </summary>
-        /// <param name="id">O ID da apólice de seguro a ser recuperada.</param>
+        /// <param name="id">O ID da apólice de seguro a ser recuperada</param>
         /// <response code="200">Retorna DTO da apólice</response>
         /// <response code="404">Caso ID da apólice estiver incorreto</response>
 
@@ -48,9 +48,9 @@ namespace Application.Controllers
         }
         
         /// <summary>
-        /// Cria uma nova apólice de seguro.
+        /// Cria uma nova apólice de seguro
         /// </summary>
-        /// <param name="createPolicyDto">Os dados da nova apólice de seguro a ser criada.</param>
+        /// <param name="createPolicyDto">Os dados da nova apólice de seguro a ser criada</param>
         /// <response code="201">Cria a nova apólice e retorna seu DTO</response>
         /// <response code="400">Caso o request estiver incorreto</response>
         /// <response code="500">Erro inesperado</response>
@@ -75,10 +75,10 @@ namespace Application.Controllers
         }
         
         /// <summary>
-        /// Atualiza a apólice de seguro com o ID especificado.
+        /// Atualiza a apólice de seguro com o ID especificado
         /// </summary>
-        /// <param name="id">O ID da apólice de seguro a ser atualizada.</param>
-        /// <param name="policy">Os novos dados da apólice de seguro.</param>
+        /// <param name="id">O ID da apólice de seguro a ser atualizada</param>
+        /// <param name="policy">Os novos dados da apólice de seguro</param>
         /// <response code="200">Retorna o DTO da apólice atualizada</response>
         /// <response code="404">Caso o request estiver incorreto</response>
         /// <response code="500">Erro inesperado</response>
@@ -101,9 +101,9 @@ namespace Application.Controllers
         }
         
         /// <summary>
-        /// Deleta a apólice de seguro com o ID especificado.
+        /// Deleta a apólice de seguro com o ID especificado
         /// </summary>
-        /// <param name="id">O ID da apólice de seguro a ser deletada.</param>
+        /// <param name="id">O ID da apólice de seguro a ser deletada</param>
         /// <response code="204">Apólice excluída com sucesso</response>
         /// <response code="404">Caso o ID for incorreto</response>
         /// <response code="500">Erro inesperado</response>

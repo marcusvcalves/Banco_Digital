@@ -17,7 +17,7 @@ namespace Application.Controllers
         }
         
         /// <summary>
-        /// Retorna todos os clientes.
+        /// Retorna todos os clientes
         /// </summary>
         /// <response code="200">Retorna lista com os DTOs de todos os clientes</response>
         [HttpGet]
@@ -28,9 +28,9 @@ namespace Application.Controllers
         }
         
         /// <summary>
-        /// Retorna o cliente com o ID especificado.
+        /// Retorna o cliente com o ID especificado
         /// </summary>
-        /// <param name="id">O ID do cliente a ser recuperado.</param>
+        /// <param name="id">O ID do cliente a ser recuperado</param>
         /// <response code="200">Retorna o DTO do cliente especificado</response>
         /// <response code="404">Caso não for encontrado cliente com o ID especificado</response>
         [HttpGet("{id}")]
@@ -45,9 +45,9 @@ namespace Application.Controllers
         }
         
         /// <summary>
-        /// Cria um novo cliente.
+        /// Cria um novo cliente
         /// </summary>
-        /// <param name="createClientDto">Os dados do novo cliente a ser criado.</param>
+        /// <param name="createClientDto">Os dados do novo cliente a ser criado</param>
         /// <response code="201">Cria o novo cliente e retorna seu DTO</response>
         /// <response code="500">Erro inesperado</response>
         [HttpPost]
@@ -65,10 +65,10 @@ namespace Application.Controllers
         }
         
         /// <summary>
-        /// Atualiza o cliente com o ID especificado.
+        /// Atualiza o cliente com o ID especificado
         /// </summary>
-        /// <param name="id">O ID do cliente a ser atualizado.</param>
-        /// <param name="client">Os novos dados do cliente.</param>
+        /// <param name="id">O ID do cliente a ser atualizado</param>
+        /// <param name="client">Os novos dados do cliente</param>
         /// <response code="200">Retorna o DTO atualizado do cliente</response>
         /// <response code="404">Caso não exista cliente com o ID especificado</response>
         /// <response code="500">Erro inesperado</response>
@@ -91,9 +91,9 @@ namespace Application.Controllers
         }
         
         /// <summary>
-        /// Deleta o cliente com o ID especificado.
+        /// Deleta o cliente com o ID especificado
         /// </summary>
-        /// <param name="id">O ID do cliente a ser deletado.</param>
+        /// <param name="id">O ID do cliente a ser deletado</param>
         /// <response code="204">Cliente excluído com sucesso</response>
         /// <response code="404">Caso o ID for incorreto</response>
         /// <response code="500">Erro inesperado</response>

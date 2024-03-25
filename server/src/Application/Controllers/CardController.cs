@@ -17,7 +17,7 @@ namespace Application.Controllers
         }
 
         /// <summary>
-        /// Retorna todos os cartões.
+        /// Retorna todos os cartões
         /// </summary>
         /// <response code="200">Lista com os DTOs de todos os cartões</response>
         [HttpGet]
@@ -28,9 +28,9 @@ namespace Application.Controllers
         }
 
         /// <summary>
-        /// Retorna o cartão com o ID especificado.
+        /// Retorna o cartão com o ID especificado
         /// </summary>
-        /// <param name="id">O ID do cartão a ser recuperado.</param>
+        /// <param name="id">O ID do cartão a ser recuperado</param>
         /// <response code="200">Retorna o DTO do cartão</response>
         /// <response code="404">Caso não encontre cartão com o ID</response>
         [HttpGet("{id}")]
@@ -47,7 +47,7 @@ namespace Application.Controllers
         /// <summary>
         /// Cria um novo cartão.
         /// </summary>
-        /// <param name="createCardDto">Os dados do novo cartão a ser criado.</param>
+        /// <param name="createCardDto">Os dados do novo cartão a ser criado</param>
         /// <response code="201">Retorna o DTO do cartão</response>
         /// <response code="400">Caso o request estiver incorreto</response>
         /// <response code="500">Erro inesperado</response>
@@ -70,10 +70,10 @@ namespace Application.Controllers
         }
 
         /// <summary>
-        /// Atualiza o cartão com o ID especificado.
+        /// Atualiza o cartão com o ID especificado
         /// </summary>
-        /// <param name="id">O ID do cartão a ser atualizado.</param>
-        /// <param name="card">Os novos dados do cartão.</param>
+        /// <param name="id">O ID do cartão a ser atualizado</param>
+        /// <param name="card">Os novos dados do cartão</param>
         /// <response code="200">Atualiza o cartão e retorna seu DTO</response>
         /// <response code="404">Caso o request estiver incorreto</response>
         /// <response code="500">Erro inesperado</response>
@@ -96,9 +96,9 @@ namespace Application.Controllers
         }
 
         /// <summary>
-        /// Deleta o cartão com o ID especificado.
+        /// Deleta o cartão com o ID especificado
         /// </summary>
-        /// <param name="id">O ID do cartão a ser deletado.</param>
+        /// <param name="id">O ID do cartão a ser deletado</param>
         /// <response code="204">Cartão excluído com sucesso</response>
         /// <response code="404">Caso o request estiver incorreto</response>
         /// <response code="500">Erro inesperado</response>
