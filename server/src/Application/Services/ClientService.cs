@@ -40,7 +40,7 @@ namespace Application.Services
             }
             catch (Exception ex)
             {
-                throw new Exception($"Erro ao criar cliente: {ex.Message}.");
+                throw new Exception(ex.Message);
             }
         }
 
@@ -49,13 +49,12 @@ namespace Application.Services
             Client? existingClient = await _clientRepository.GetByIdAsync(id);
 
             if (existingClient == null)
-            {
                 throw new ArgumentException("O cliente especificado não existe.");
-            }
 
             existingClient.Cpf = client.Cpf;
             existingClient.Name = client.Name;
             existingClient.BirthDate = client.BirthDate;
+            existingClient.ClientType = client.ClientType;
             existingClient.Address = client.Address;
 
             await _clientRepository.UpdateAsync(existingClient);

@@ -3,6 +3,7 @@ using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models.DTOs;
 using Domain.Models.Entities;
+using Domain.Models.Enums;
 
 namespace Application.Services
 {
@@ -40,14 +41,27 @@ namespace Application.Services
                 if (existingClient == null)
                     throw new ArgumentException("O cliente correspondente não pode ser encontrado.");
 
-                Account newAccount = _mapper.Map<Account>(createAccountDto);
+                Account newAccount;
+
+                switch (createAccountDto.AccountType)
+                {
+                    case AccountType.Checking:
+                        newAccount = _mapper.Map<CheckingAccount>(createAccountDto);
+                        break;
+                    case AccountType.Savings:
+                        newAccount = _mapper.Map<SavingsAccount>(createAccountDto);
+                        break;
+                    default:
+                        throw new ArgumentException("Tipo de conta inválido.");
+                }
+
                 await _accountRepository.CreateAsync(newAccount);
 
                 return _mapper.Map<GetAccountDto>(newAccount);
             }
             catch (Exception ex)
             {
-                throw new Exception($"Erro ao criar conta: {ex.Message}.");
+                throw new Exception(ex.Message);
             }
         }
 
@@ -58,9 +72,11 @@ namespace Application.Services
             if (existingAccount == null)
                 throw new ArgumentException("A conta especificada não existe.");
 
+            existingAccount.Number = account.Number;
             existingAccount.Balance = account.Balance;
             existingAccount.Password = account.Password;
-
+            existingAccount.AccountType = account.AccountType;
+            
             await _accountRepository.UpdateAsync(existingAccount);
 
             return _mapper.Map<GetAccountDto>(existingAccount);

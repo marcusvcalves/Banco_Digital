@@ -57,6 +57,7 @@ namespace Application.Services
                 throw new ArgumentException("Apólice não encontrada");
 
             existingPolicy.Number = policy.Number;
+            existingPolicy.HiringDate = policy.HiringDate;
             existingPolicy.Value = policy.Value;
             existingPolicy.TriggeringDescription = policy.TriggeringDescription;
 

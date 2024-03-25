@@ -2,6 +2,7 @@
 using Domain.Interfaces;
 using Domain.Models.DTOs;
 using Domain.Models.Entities;
+using Domain.Models.Enums;
 
 namespace Application.Services
 {
@@ -38,27 +39,23 @@ namespace Application.Services
                 throw new ArgumentException("A conta correspondente não pode ser encontrada.");
 
             Card newCard;
-            if (createCardDto.CardType == "Debit")
-            {
-                DebitCard debitCard = _mapper.Map<DebitCard>(createCardDto);
-                newCard = debitCard;
-            }
-            else if (createCardDto.CardType == "Credit")
-            {
-                CreditCard creditCard = _mapper.Map<CreditCard>(createCardDto);
-                newCard = creditCard;
-            }
-            else
-            {
-                throw new ArgumentException("Tipo de cartão inválido.");
-            }
 
+            switch (createCardDto.CardType)
+            {
+                case CardType.Debit:
+                    newCard = _mapper.Map<DebitCard>(createCardDto);
+                    break;
+                case CardType.Credit:
+                    newCard = _mapper.Map<CreditCard>(createCardDto);
+                    break;
+                default:
+                    throw new ArgumentException("Tipo de cartão inválido.");
+            }
+            
             await _cardRepository.CreateAsync(newCard);
     
             return _mapper.Map<GetCardDto>(newCard);
         }
-
-
 
         public async Task<GetCardDto> UpdateCardAsync(int id, Card card)
         {
@@ -66,9 +63,10 @@ namespace Application.Services
 
             if (existingCard == null)
                 throw new ArgumentException("O cartão especificado não existe.");
-            
+
+            existingCard.Number = card.Number;
+            existingCard.CardType = card.CardType;
             existingCard.ActiveCard = card.ActiveCard;
-            existingCard.Password = card.Password;
 
             await _cardRepository.UpdateAsync(existingCard);
             return _mapper.Map<GetCardDto>(existingCard);
