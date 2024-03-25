@@ -21,10 +21,6 @@ namespace Infra.Configurations
             // accounts
             CreateMap<Account, GetAccountDto>()
                 .ForMember(dest => dest.Client, opt => opt.MapFrom(src => src.Client))
-                .ForMember(dest => dest.AccountType, opt => opt.MapFrom(src =>
-                    (src is CheckingAccount) ? "checking" :
-                    (src is SavingsAccount) ? "savings" :
-                    null))
                 .ReverseMap();
                     
             CreateMap<CreateAccountDto, Account>()
@@ -33,6 +29,7 @@ namespace Infra.Configurations
                 .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password))
                 .ForMember(dest => dest.Balance, opt => opt.MapFrom(src => src.Balance))
                 .ForMember(dest => dest.CreationDate, opt => opt.MapFrom(src => src.CreationDate))
+                .ForMember(dest => dest.AccountType, opt => opt.MapFrom(src => src.AccountType))
                 .ForMember(dest => dest.Client, opt => opt.Ignore())
                 .ForMember(dest => dest.Cards, opt => opt.Ignore());
 
