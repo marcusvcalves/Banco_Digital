@@ -1,11 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { TextField } from "@mui/material";
 import { axiosInstance } from "../api/axios";
 import { Card } from "../types/Card";
 import { Policy } from "../types/Policy";
-import { CreditCard } from "../types/CreditCard";
-
 
 type PolicyInputs = {
     number: string;
@@ -18,9 +16,13 @@ type PolicyInputs = {
 interface PolicyPageProps{
     setIsModalVisible(visible: boolean): void;
     addPolicy(newPolicy: PolicyInputs | Policy): void;
+    selectedPolicyId: number | null;
+    setSelectedPolicyId: Dispatch<SetStateAction<number | null>>;
+    policies: Policy[];
+    setPolicies: Dispatch<SetStateAction<Policy[]>>;
 }
 
-export const PolicyForm = ({ setIsModalVisible, addPolicy}: PolicyPageProps) => {
+export const PolicyForm = ({ setIsModalVisible, addPolicy, selectedPolicyId, setSelectedPolicyId, policies, setPolicies }: PolicyPageProps) => {
     const { register, handleSubmit, setValue, reset } = useForm<PolicyInputs>();
     const [cardList, setCardList] = useState<Card[]>([]);
 
@@ -37,6 +39,21 @@ export const PolicyForm = ({ setIsModalVisible, addPolicy}: PolicyPageProps) => 
     useEffect(() => {
         fetchCardList()
     }, []);
+
+    useEffect(() => {
+        if (selectedPolicyId !== null){
+            const selectedPolicy = policies.find(policy => policy.id === selectedPolicyId);
+            if (selectedPolicy){
+                setValue("number", selectedPolicy.number);
+                const hiringDate = new Date(selectedPolicy.hiringDate);
+                setValue("hiringDate", hiringDate.toISOString().split('T')[0]);
+                setValue("value", selectedPolicy.value);
+                setValue("triggeringDescription", selectedPolicy.triggeringDescription);
+            }
+            } else {
+                reset();
+            }
+    }, [selectedPolicyId, policies, reset, setValue]);
     
     const handleCardChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedCard = cardList.find(card => card.number === e.target.value);
@@ -48,16 +65,31 @@ export const PolicyForm = ({ setIsModalVisible, addPolicy}: PolicyPageProps) => 
     const onFormSubmit: SubmitHandler<PolicyInputs> = async (data) => {
         console.log(data);
 
-        await axiosInstance.post('/api/v1/apolices', data)
-        .then((res) =>{
-            console.log(res.data);
-            addPolicy(res.data);
-            setIsModalVisible(false);
-            reset();
-        })
-        .catch((error) =>{
-            console.log(error);
-        })
+        if (selectedPolicyId) {
+            axiosInstance.put(`/api/v1/apolices/${selectedPolicyId}`, data)
+                .then((res) => {
+                    const updatedPolicies = policies.map(policy =>
+                        policy.id === selectedPolicyId ? res.data : policy
+                    );
+                    setPolicies(updatedPolicies);
+                    setSelectedPolicyId(null);
+                    setIsModalVisible(false);
+                    reset();
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        } else {
+            await axiosInstance.post('/api/v1/apolices', data)
+                .then((res) => {
+                    addPolicy(res.data);
+                    setIsModalVisible(false);
+                    reset();
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
     };
     
     return (

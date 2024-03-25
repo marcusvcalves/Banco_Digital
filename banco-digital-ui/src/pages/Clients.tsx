@@ -9,6 +9,7 @@ import { Client } from "../types/Client";
 
 export const Clients = () => {
   const [clients, setClients] = useState<Client[]>([]);
+  const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   
@@ -40,7 +41,8 @@ export const Clients = () => {
   }));
 
   const editClient = (id: number): void => {
-    console.log(`editar cliente ${id}`)
+    setIsModalVisible(true);
+    setSelectedClientId(id);
   }
 
   const deleteClient = (id: number): void => {
@@ -60,6 +62,7 @@ export const Clients = () => {
 
   const handleModalClose = (): void => {
     setIsModalVisible(false);
+    setSelectedClientId(null);
   };
 
   const addClient = (newClient: Client): void => {
@@ -95,7 +98,14 @@ export const Clients = () => {
         onCancel={handleModalClose}
         footer={null}
       >
-        <ClientForm setIsModalVisible={setIsModalVisible} addNewClient={addClient}/>
+        <ClientForm 
+          setIsModalVisible={setIsModalVisible}
+          addNewClient={addClient}
+          selectedClientId={selectedClientId}
+          setSelectedClientId={setSelectedClientId}
+          clients={clients}
+          setClients={setClients}
+        />
       </Modal>
     </div>
   );

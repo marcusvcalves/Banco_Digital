@@ -9,6 +9,7 @@ import { Policy } from "../types/Policy";
 
 export const Policies = () => {
   const [policies, setPolicies] = useState<Policy[]>([]);
+  const [selectedPolicyId, setSelectedPolicyId] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -18,7 +19,6 @@ export const Policies = () => {
       .get("/api/v1/apolices")
       .then((res) => {
         setPolicies(res.data.$values);
-        console.log(res.data.$values);
         setLoading(false);
       })
       .catch((error) => {
@@ -41,7 +41,8 @@ export const Policies = () => {
   }));
 
   const editPolicy = (id: number): void => {
-    console.log(`editar apólice ${id}`)
+    setIsModalVisible(true);
+    setSelectedPolicyId(id);
   };
 
   const deletePolicy = (id: number): void => {
@@ -61,6 +62,7 @@ export const Policies = () => {
 
   const handleModalClose = (): void => {
     setIsModalVisible(false);
+    setSelectedPolicyId(null);
   };
 
   const addPolicy = (newPolicy: Policy): void => {
@@ -101,7 +103,14 @@ export const Policies = () => {
           onCancel={handleModalClose}
           footer={null}
         >
-          <PolicyForm setIsModalVisible={setIsModalVisible} addPolicy={addPolicy}/>
+          <PolicyForm
+            setIsModalVisible={setIsModalVisible} 
+            addPolicy={addPolicy}
+            selectedPolicyId={selectedPolicyId}
+            setSelectedPolicyId={setSelectedPolicyId}
+            policies={policies}
+            setPolicies={setPolicies}
+          />
         </Modal>
       </div>
   );

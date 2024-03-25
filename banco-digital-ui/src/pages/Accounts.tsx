@@ -10,6 +10,7 @@ import { Pix } from "../components/Pix";
 
 export const Accounts = () => {
   const [accounts, setAccounts] = useState<Account[]>([]);
+  const [selectedAccountId, setSelectedAccountId] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
@@ -31,7 +32,8 @@ export const Accounts = () => {
   },[]);
 
   const editAccount = (id: number): void => {
-    console.log(`editar conta ${id}`)
+    setIsModalVisible(true);
+    setSelectedAccountId(id);
   };
 
   const deleteAccount = (id: number): void => {
@@ -51,6 +53,7 @@ export const Accounts = () => {
 
   const handleModalClose = (): void => {
     setIsModalVisible(false);
+    setSelectedAccountId(null);
   };
 
   const addAccount = (newAccount: Account): void => {
@@ -71,7 +74,7 @@ export const Accounts = () => {
     "id": account.id,
     "numero": account.number,
     "saldo": `R$ ${account.balance}`,
-    "tipoConta": account.accountType === "savings" ? "Poupança" : account.accountType === "checking" ? "Corrente" : "Comum",
+    "tipoConta": account.accountType === "Savings" ? "Poupança" : account.accountType === "Checking" ? "Corrente" : "Comum",
     "dataCriacao": format(new Date(account.creationDate), 'dd/MM/yyyy'),
     "nomeCliente": account.client.name
   }));
@@ -110,7 +113,14 @@ export const Accounts = () => {
         onCancel={handleModalClose}
         footer={null}
       >
-        <AccountForm setIsModalVisible={setIsModalVisible} addAccount={addAccount}/>
+        <AccountForm 
+          setIsModalVisible={setIsModalVisible}
+          addAccount={addAccount}
+          selectedAccountId={selectedAccountId}
+          setSelectedAccountId={setSelectedAccountId}
+          accounts={accounts}
+          setAccounts={setAccounts}
+        />
       </Modal>
     </div>
   );

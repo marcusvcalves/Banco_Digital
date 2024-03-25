@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { TextField } from "@mui/material";
 import { axiosInstance } from "../api/axios";
@@ -19,10 +19,14 @@ type AccountInputs = {
 interface AccountPageProps {
     setIsModalVisible(visible: boolean): void;
     addAccount(newAccount: AccountInputs | Account): void;
+    selectedAccountId: number | null;
+    setSelectedAccountId: Dispatch<SetStateAction<number | null>>;
+    accounts: Account[];
+    setAccounts: Dispatch<SetStateAction<Account[]>>;
 }
 
-export const AccountForm = ({ setIsModalVisible, addAccount }: AccountPageProps) => {
-    const { register, handleSubmit, reset, getValues } = useForm<AccountInputs>();
+export const AccountForm = ({ setIsModalVisible, addAccount, selectedAccountId, setSelectedAccountId, accounts, setAccounts }: AccountPageProps) => {
+    const { register, handleSubmit, reset, getValues, setValue } = useForm<AccountInputs>();
     const [clientList, setClientList] = useState<Client[]>([]);
     const [selectedClientId, setSelectedClientId] = useState<string>("");
 
@@ -38,6 +42,24 @@ export const AccountForm = ({ setIsModalVisible, addAccount }: AccountPageProps)
     useEffect(() => {
         fetchClientList()
     }, []);
+
+    useEffect(() => {
+        if (selectedAccountId !== null){
+            const selectedAccount = accounts.find(account => account.id === selectedAccountId);
+            if (selectedAccount){
+                setValue("number", selectedAccount.number);
+                setValue("balance", selectedAccount.balance);
+
+                if (selectedAccount.accountType === "Checking") {
+                    setValue("accountType", "Checking");
+                } else if (selectedAccount.accountType === "Savings") {
+                    setValue("accountType", "Savings");
+                }
+            }
+            } else {
+                reset();
+            }
+    }, [selectedAccountId, accounts, reset, setValue]);
     
     const handleClientChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedClient = clientList.find(client => client.name === e.target.value);
@@ -48,19 +70,43 @@ export const AccountForm = ({ setIsModalVisible, addAccount }: AccountPageProps)
 
     const onFormSubmit: SubmitHandler<AccountInputs> = async () => {
         const formData = getValues();
-        formData.creationDate = new Date().toISOString();
-        formData.clientId = selectedClientId;
-        
-        await axiosInstance.post('/api/v1/contas', formData)
-        .then((res) =>{
-            addAccount(res.data);
-            setIsModalVisible(false);
-            reset();
-        })
-        .catch((error) =>{
-            console.log(error);
-        })
-        
+        if (selectedAccountId){
+            console.log(formData)
+            axiosInstance.put(`/api/v1/contas/${selectedAccountId}`, formData)
+            .then((res) => {
+                const updatedAccounts = accounts.map(account =>
+                    account.id === selectedAccountId ? {
+                        ...account,
+                        number: res.data.number,
+                        password: res.data.password,
+                        balance: res.data.balance
+                    } : account);
+                    console.log(res.data)
+                setAccounts(updatedAccounts);
+                setSelectedAccountId(null);
+                setIsModalVisible(false);
+                reset();
+            })
+            .catch((error) =>{
+                console.log(error);
+            })
+        }
+        else {
+            const formData = getValues();
+            formData.creationDate = new Date().toISOString();
+            formData.clientId = selectedClientId;
+            console.log(formData)
+            
+            await axiosInstance.post('/api/v1/contas', formData)
+            .then((res) =>{
+                addAccount(res.data);
+                setIsModalVisible(false);
+                reset();
+            })
+            .catch((error) =>{
+                console.log(error);
+            })
+        }
     };
 
     return (
@@ -77,11 +123,11 @@ export const AccountForm = ({ setIsModalVisible, addAccount }: AccountPageProps)
             <label htmlFor="balance" className="block text-gray-700 font-bold mb-2">Saldo</label>
             <input type="number" id="balance" defaultValue={0} {...register("balance", { min: 0 })} className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"/>
 
-            <label htmlFor="cardType" className="block text-gray-700 font-bold mb-2">Tipo de Conta<span className="text-red-600">*</span></label>
+            <label htmlFor="accountType" className="block text-gray-700 font-bold mb-2">Tipo de Conta<span className="text-red-600">*</span></label>
             <div className="mb-6 mt-4">
-                <input type="radio" id="checkingAccount" value="checking" {...register("accountType")} className="mr-2 leading-tight"/>
+                <input type="radio" id="checkingAccount" value="Checking" {...register("accountType")} className="mr-2 leading-tight"/>
                 <label htmlFor="debito" className="mr-4">Corrente</label>
-                <input type="radio" id="savingsAccount" value="savings" {...register("accountType")} className="mr-2 leading-tight"/>
+                <input type="radio" id="savingsAccount" value="Savings" {...register("accountType")} className="mr-2 leading-tight"/>
                 <label htmlFor="credito">Poupança</label>
             </div>
 

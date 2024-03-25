@@ -1,7 +1,7 @@
 import { TextField } from "@mui/material";
 import { axiosInstance } from "../api/axios";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Account } from "../types/Account";
 import { Card } from "../types/Card";
 
@@ -18,9 +18,13 @@ type CardInputs = {
 interface CardPageProps{
     setIsModalVisible(visible: boolean): void;
     addCard(newCard: CardInputs | Card): void;
+    selectedCardId: number | null;
+    setSelectedCardId: Dispatch<SetStateAction<number | null>>;
+    cards: Card[];
+    setCards: Dispatch<SetStateAction<Card[]>>;
 }
 
-export const CardForm = ({ setIsModalVisible, addCard}: CardPageProps) => {
+export const CardForm = ({ setIsModalVisible, addCard, selectedCardId, setSelectedCardId, cards, setCards}: CardPageProps) => {
     const { register, handleSubmit, getValues, setValue, reset } = useForm<CardInputs>();
     const [accountList, setAccountList] = useState<Account[]>([]);
     const [selectedAccountId, setSelectedAccountId] = useState<string>("");
@@ -39,6 +43,24 @@ export const CardForm = ({ setIsModalVisible, addCard}: CardPageProps) => {
     useEffect(() => {
         fetchAccountList()
     }, []);
+
+    useEffect(() => {
+        if (selectedCardId !== null){
+            const selectedCard = cards.find(card => card.id === selectedCardId);
+            if (selectedCard){
+                setValue("number", selectedCard.number);
+                setValue("cardType", selectedCard.cardType);
+                setValue("activeCard", selectedCard.activeCard);
+    
+                setSelectedCardType(selectedCard.cardType);
+                setSelectedActiveCard(selectedCard.activeCard ? "true" : "false");
+            }
+        } else {
+            reset();
+            setSelectedCardType("");
+            setSelectedActiveCard("");
+        }
+    }, [selectedCardId, cards, reset, setValue])
     
     const handleAccountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedAccount = accountList.find(account => account.number === e.target.value);
@@ -61,20 +83,36 @@ export const CardForm = ({ setIsModalVisible, addCard}: CardPageProps) => {
 
     const onFormSubmit: SubmitHandler<CardInputs> = async () => {
         const formData = getValues();
-        formData.accountId = selectedAccountId;
-        console.log(formData);
-
-        await axiosInstance.post('/api/v1/cartoes', formData)
-        .then((res) =>{
-            addCard(res.data);
-            setIsModalVisible(false);
-            reset();
-            setSelectedActiveCard("");
-            setSelectedCardType("");
-        })
-        .catch((error) =>{
-            console.log(error);
-        })
+        if (selectedCardId){
+            axiosInstance.put(`/api/v1/cartoes/${selectedCardId}`, formData)
+            .then((res) => {
+                setCards(cards.map(card =>
+                    card.id === selectedCardId ? res.data : card
+                    ))
+                setSelectedCardId(null);
+                setIsModalVisible(false);
+                reset();
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+        }
+        else {
+            const formData = getValues();
+            formData.accountId = selectedAccountId;
+    
+            await axiosInstance.post('/api/v1/cartoes', formData)
+            .then((res) =>{
+                addCard(res.data);
+                setIsModalVisible(false);
+                reset();
+                setSelectedActiveCard("");
+                setSelectedCardType("");
+            })
+            .catch((error) =>{
+                console.log(error);
+            })
+        }
     };
     
     return (

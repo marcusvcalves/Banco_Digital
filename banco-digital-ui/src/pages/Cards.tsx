@@ -8,6 +8,7 @@ import { Card } from "../types/Card";
 
 export const Cards = () => {
   const [cards, setCards] = useState<Card[]>([]);
+  const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
@@ -17,7 +18,6 @@ export const Cards = () => {
       .get("/api/v1/cartoes")
       .then((res) => {
         setCards(res.data.$values);
-        console.log(res.data.$values);
         setLoading(false);
       })
       .catch((error) => {
@@ -39,7 +39,8 @@ export const Cards = () => {
   }));
 
   const editCard = (id: number): void => {
-    console.log(`editar cartão ${id}`)
+    setIsModalVisible(true);
+    setSelectedCardId(id);
   };
 
   const deleteCard = (id: number): void => {
@@ -59,6 +60,7 @@ export const Cards = () => {
 
   const handleModalClose = (): void => {
     setIsModalVisible(false);
+    setSelectedCardId(null);
   };
 
   const addCard = (newCard: Card): void => {
@@ -100,7 +102,14 @@ export const Cards = () => {
           onCancel={handleModalClose}
           footer={null}
         >
-          <CardForm setIsModalVisible={setIsModalVisible} addCard={addCard}/>
+          <CardForm
+            setIsModalVisible={setIsModalVisible}
+            addCard={addCard}
+            selectedCardId={selectedCardId}
+            setSelectedCardId={setSelectedCardId}
+            cards={cards}
+            setCards={setCards}
+            />
         </Modal>
       </div>
   );
