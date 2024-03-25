@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Domain.Models.Enums;
 using Domain.Models.Entities;
     
 namespace Infra.Data;
@@ -18,42 +19,51 @@ public class AppDbContext : DbContext
         base.OnModelCreating(modelBuilder);
         
         modelBuilder.Entity<Policy>()
-            .Property(a => a.Value)
+            .Property(policy => policy.Value)
             .HasColumnType("decimal(18, 2)");
 
         modelBuilder.Entity<Client>()
-            .Property(c => c.ClientType)
+            .Property(client => client.ClientType)
             .HasConversion<string>();
+        
+        modelBuilder.Entity<Account>()
+            .Property(acc => acc.Balance)
+            .HasColumnType("decimal(18, 2)");
 
         modelBuilder.Entity<Account>()
-            .HasDiscriminator<string>("accountType")
-            .HasValue<CheckingAccount>("checking")
-            .HasValue<SavingsAccount>("savings");
+            .Property(acc => acc.AccountType)
+            .HasConversion<string>();
         
         modelBuilder.Entity<Account>()
-            .Property(c => c.Balance)
-            .HasColumnType("decimal(18, 2)");
-        
+            .HasDiscriminator<AccountType>("AccountType")
+            .HasValue<Account>(AccountType.Common)
+            .HasValue<CheckingAccount>(AccountType.Checking)
+            .HasValue<SavingsAccount>(AccountType.Savings);
+
         modelBuilder.Entity<CheckingAccount>()
-            .Property(c => c.MonthlyFee)
+            .Property(acc => acc.MonthlyFee)
             .HasColumnType("decimal(18, 2)");
 
         modelBuilder.Entity<SavingsAccount>()
-            .Property(c => c.ReturnRates)
+            .Property(acc => acc.ReturnRates)
             .HasColumnType("decimal(18, 2)");
 
         modelBuilder.Entity<Card>()
-            .HasDiscriminator<string>("cardType")
-            .HasValue<DebitCard>("debito")
-            .HasValue<CreditCard>("credito");
+            .Property(card => card.CardType)
+            .HasConversion<string>();
         
+        modelBuilder.Entity<Card>()
+            .HasDiscriminator<CardType>("CardType")
+            .HasValue<Card>(CardType.Normal)
+            .HasValue<DebitCard>(CardType.Debit)
+            .HasValue<CreditCard>(CardType.Credit);
 
         modelBuilder.Entity<DebitCard>()
-            .Property(c => c.DailyLimit)
+            .Property(card => card.DailyLimit)
             .HasColumnType("decimal(18, 2)");
 
         modelBuilder.Entity<CreditCard>()
-            .Property(c => c.CreditLimit)
+            .Property(card => card.CreditLimit)
             .HasColumnType("decimal(18, 2)");
     }
 }
