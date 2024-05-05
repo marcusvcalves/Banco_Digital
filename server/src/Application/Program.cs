@@ -51,7 +51,10 @@ builder.Services.AddScoped<ICardService, CardService>();
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 
-builder.Services.AddAutoMapper(typeof(MapperConfig));
+builder.Services.AddAutoMapper(typeof(AccountMapperConfig));
+builder.Services.AddAutoMapper(typeof(CardMapperConfig));
+builder.Services.AddAutoMapper(typeof(ClientMapperConfig));
+builder.Services.AddAutoMapper(typeof(PolicyMapperConfig));
 
 builder.Services.AddCors(options =>
 {
