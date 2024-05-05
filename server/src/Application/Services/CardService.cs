@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Domain.Interfaces;
+using Infra.Repositories.Interfaces;
 using Domain.Models.DTOs;
 using Domain.Models.Entities;
 using Domain.Models.Enums;

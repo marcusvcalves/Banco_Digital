@@ -1,9 +1,9 @@
-﻿using Domain.Interfaces;
+﻿using Infra.Repositories.Interfaces;
 using Domain.Models.Entities;
 using Infra.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infra.Repositories;
+namespace Infra.Repositories.Implementations;
 
 public class PolicyRepository : IPolicyRepository
 {

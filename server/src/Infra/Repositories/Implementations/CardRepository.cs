@@ -1,9 +1,9 @@
-﻿using Domain.Interfaces;
+﻿using Infra.Repositories.Interfaces;
 using Infra.Data;
 using Domain.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infra.Repositories;
+namespace Infra.Repositories.Implementations;
 
 public class CardRepository : ICardRepository
 {

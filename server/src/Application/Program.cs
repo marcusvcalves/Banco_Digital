@@ -1,10 +1,10 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
 using Application.Services;
-using Domain.Interfaces;
+using Infra.Repositories.Interfaces;
 using Infra.Configurations;
 using Infra.Data;
-using Infra.Repositories;
+using Infra.Repositories.Implementations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
