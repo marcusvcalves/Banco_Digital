@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
-using Application.Services;
+using Application.Services.Implementations;
+using Application.Services.Interfaces;
 using Infra.Repositories.Interfaces;
 using Infra.Configurations;
 using Infra.Data;

@@ -1,7 +1,7 @@
 ﻿using Domain.Models.DTOs;
 using Domain.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Application.Services;
+using Application.Services.Interfaces;
 
 namespace Application.Controllers
 {

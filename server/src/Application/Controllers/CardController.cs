@@ -1,4 +1,4 @@
-﻿using Application.Services;
+﻿using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Domain.Models.DTOs;
 using Domain.Models.Entities;

@@ -1,7 +1,7 @@
 ﻿using Domain.Models.DTOs;
 using Domain.Models.Entities;
 
-namespace Application.Services;
+namespace Application.Services.Interfaces;
 
 public interface IPolicyService
 {
