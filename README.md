@@ -1,7 +1,7 @@
-# Banco_Digital
+# banco-digital
 Projeto realizado como base para o Curso de Formação .NET Código de Base Educ360
 
-## Requisitos esperados do sistema:
+## Desafio Proposto:
 
 Você montou uma startup que desenvolve softwares para clientes. Seu primeiro cliente é de uma instituição financeira e quer um software na web que seja capaz de cadastrar dados de seus clientes como CPF, Nome, Data de nascimento e Endereço. Os clientes podem ser subdivididos em três categorias: Comum, Super e Premium e podem abrir contas de dois tipos: corrente e poupança, devendo estas realizar ações básicas, como exibir saldo e fazer transferências via Pix. A conta corrente possui uma taxa mensal de manutenção que deve ser descontada a cada mês e a conta poupança deve fazer o acréscimo conforma a taxa de rendimento no momento.
 
